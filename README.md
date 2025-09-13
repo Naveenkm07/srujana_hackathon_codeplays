@@ -1,10 +1,15 @@
 # 🎓 Smart Tutor Dashboard
+
 ### Adaptive Learning Platform for Personalized Education
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/smart-tutor-dashboard)
+<div align="center">
+
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Naveenkm07/srujana_hackathon_codeplays)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/smart-tutor-dashboard)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/Naveenkm07/srujana_hackathon_codeplays)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](CONTRIBUTING.md)
+
+</div>
 
 ---
 
@@ -18,23 +23,23 @@ Our mission is to democratize quality education by providing intelligent, adapti
 
 ---
 
-## 🚀 **Key Features & Capabilities**
+## 🚀 Key Features & Capabilities
 
-### 🎯 **Core Educational Features**
+### 🎯 Core Educational Features
 
 | Feature | Implementation | Educational Impact |
 |---------|----------------|-------------------|
-| **🔍 Diagnostic Assessment** | Intelligent pre-assessment system | Identifies student's current level, strengths & weak points for tailored content |
-| **🧭 Dynamic Learning Path** | Adaptive algorithm based on diagnostics & quiz results | Personalizes difficulty and topic progression for optimal learning |
-| **💡 Interactive Quizzes** | Smart feedback system with explanatory hints | Promotes critical thinking beyond correct/incorrect responses |
-| **📊 Progress Tracking** | Visual dashboards and comprehensive reporting | Real-time insights for students and detailed analytics for teachers |
-| **🎯 Resource Recommendation** | Intelligent content suggestion engine | Suggests videos, articles, and interactive problems based on learning gaps |
-| **📱 Offline Support** | Progressive Web App capabilities | Ensures learning continuity in low-bandwidth environments |
-| **👨‍🏫 Human-Teacher Integration** | Collaborative learning environment | Enables teacher oversight while maintaining AI-driven personalization |
-| **🔒 Privacy & Data Protection** | Secure data handling with consent management | GDPR-compliant with anonymization options |
-| **🎮 Gamification Elements** | Achievement system with badges and rewards | Motivates learners through peer interaction and progress recognition |
+| 🔍 **Diagnostic Assessment** | Intelligent pre-assessment system | Identifies student's current level, strengths & weak points for tailored content |
+| 🧭 **Dynamic Learning Path** | Adaptive algorithm based on diagnostics & quiz results | Personalizes difficulty and topic progression for optimal learning |
+| 💡 **Interactive Quizzes** | Smart feedback system with explanatory hints | Promotes critical thinking beyond correct/incorrect responses |
+| 📊 **Progress Tracking** | Visual dashboards and comprehensive reporting | Real-time insights for students and detailed analytics for teachers |
+| 🎯 **Resource Recommendation** | Intelligent content suggestion engine | Suggests videos, articles, and interactive problems based on learning gaps |
+| 📱 **Offline Support** | Progressive Web App capabilities | Ensures learning continuity in low-bandwidth environments |
+| 👨‍🏫 **Human-Teacher Integration** | Collaborative learning environment | Enables teacher oversight while maintaining AI-driven personalization |
+| 🔒 **Privacy & Data Protection** | Secure data handling with consent management | GDPR-compliant with anonymization options |
+| 🎮 **Gamification Elements** | Achievement system with badges and rewards | Motivates learners through peer interaction and progress recognition |
 
-### 👨‍🎓 **Student Experience**
+### 👨‍🎓 Student Experience
 
 - **Personalized Dashboard**: Customized learning overview with progress visualization
 - **Adaptive Content Delivery**: Smart curriculum that adjusts based on performance
@@ -44,7 +49,7 @@ Our mission is to democratize quality education by providing intelligent, adapti
 - **Multi-Subject Support**: Mathematics, Science, English, and History modules
 - **Interactive Learning**: Engaging quizzes, exercises, and hands-on activities
 
-### 👩‍🏫 **Teacher Experience**
+### 👩‍🏫 Teacher Experience
 
 - **Class Management**: Comprehensive student oversight and progress monitoring
 - **Advanced Analytics**: Detailed performance metrics and learning pattern analysis
@@ -55,9 +60,9 @@ Our mission is to democratize quality education by providing intelligent, adapti
 
 ---
 
-## 🏗️ **Technical Architecture**
+## 🏗️ Technical Architecture
 
-### **Frontend Stack**
+### Frontend Stack
 ```
 ├── HTML5 (Semantic Structure)
 ├── CSS3 (Design System + Custom Properties)
@@ -66,21 +71,21 @@ Our mission is to democratize quality education by providing intelligent, adapti
 └── Progressive Web App (PWA) Capabilities
 ```
 
-### **Design Philosophy**
+### Design Philosophy
 - **Mobile-First Responsive Design**
 - **Accessibility-Driven Development** (WCAG 2.1 AA Compliant)
 - **Dark/Light Mode Support**
 - **Component-Based CSS Architecture**
 - **Performance-Optimized Asset Loading**
 
-### **Data Management**
+### Data Management
 - **Client-Side Storage**: localStorage for user sessions and progress
 - **Modular Data Structure**: Organized subject, assessment, and user data
 - **Real-time State Management**: Event-driven architecture for seamless UX
 
 ---
 
-## 📦 **Project Structure**
+## 📦 Project Structure
 
 ```
 smart-tutor-dashboard/
@@ -89,12 +94,10 @@ smart-tutor-dashboard/
 ├── 🎨 style.css               # Comprehensive design system
 ├── ⚡ app.js                  # Application logic and functionality
 ├── 📚 README.md               # Project documentation
-├── 📋 CONTRIBUTING.md         # Contribution guidelines
-├── 📜 LICENSE                 # MIT License
-└── 🚀 DEPLOYMENT.md           # Deployment instructions
+└── 📜 LICENSE                 # MIT License
 ```
 
-### **File Breakdown**
+### File Breakdown
 
 | File | Size | Purpose | Key Features |
 |------|------|---------|-------------|
@@ -104,19 +107,19 @@ smart-tutor-dashboard/
 
 ---
 
-## 🚀 **Quick Start Guide**
+## 🚀 Quick Start Guide
 
-### **Prerequisites**
+### Prerequisites
 - Modern web browser (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
 - Local web server (for development)
 - Node.js 16+ (optional, for development tools)
 
-### **Installation & Setup**
+### Installation & Setup
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/smart-tutor-dashboard.git
-   cd smart-tutor-dashboard
+   git clone https://github.com/Naveenkm07/srujana_hackathon_codeplays.git
+   cd srujana_hackathon_codeplays
    ```
 
 2. **Local Development Server**
@@ -136,16 +139,16 @@ smart-tutor-dashboard/
    http://localhost:8000
    ```
 
-### **Production Deployment**
+### Production Deployment
 
-#### **Static Hosting Options**
+#### Static Hosting Options
 
 - **Netlify**: Drag & drop deployment
 - **Vercel**: Git-based automatic deployment
 - **GitHub Pages**: Free hosting for open source projects
 - **AWS S3 + CloudFront**: Enterprise-scale hosting
 
-#### **Docker Deployment**
+#### Docker Deployment
 ```dockerfile
 FROM nginx:alpine
 COPY . /usr/share/nginx/html
@@ -155,30 +158,30 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ---
 
-## 🎯 **Feature Implementation Roadmap**
+## 🎯 Feature Implementation Roadmap
 
-### **Phase 1: Core MVP** ✅ *Completed*
+### Phase 1: Core MVP ✅ *Completed*
 - [x] User authentication and role management
 - [x] Basic diagnostic assessment system
 - [x] Learning module structure
 - [x] Progress tracking dashboard
 - [x] Teacher oversight panel
 
-### **Phase 2: Enhanced Learning** 🚧 *In Progress*
+### Phase 2: Enhanced Learning 🚧 *In Progress*
 - [ ] Advanced AI recommendation engine
 - [ ] Real-time collaboration features
 - [ ] Extended subject matter coverage
 - [ ] Advanced analytics dashboard
 - [ ] Mobile app development
 
-### **Phase 3: AI Integration** 🔮 *Planned*
+### Phase 3: AI Integration 🔮 *Planned*
 - [ ] Natural Language Processing for content generation
 - [ ] Machine Learning-based difficulty adjustment
 - [ ] Predictive analytics for learning outcomes
 - [ ] Voice-activated learning assistance
 - [ ] Automated content creation tools
 
-### **Phase 4: Enterprise Features** 🔮 *Future*
+### Phase 4: Enterprise Features 🔮 *Future*
 - [ ] Multi-tenant architecture
 - [ ] Advanced reporting and analytics
 - [ ] Integration with Learning Management Systems
@@ -187,15 +190,15 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ---
 
-## 🔧 **Development Guidelines**
+## 🔧 Development Guidelines
 
-### **Code Standards**
+### Code Standards
 - **JavaScript**: ES6+ standards, modular architecture
 - **CSS**: BEM methodology, CSS custom properties
 - **HTML**: Semantic markup, accessibility-first approach
 - **Performance**: < 3s initial load time, optimized assets
 
-### **Browser Support**
+### Browser Support
 | Browser | Minimum Version | Status |
 |---------|----------------|--------|
 | Chrome | 90+ | ✅ Fully Supported |
@@ -205,7 +208,7 @@ CMD ["nginx", "-g", "daemon off;"]
 | Mobile Safari | 14+ | ✅ Fully Supported |
 | Chrome Android | 90+ | ✅ Fully Supported |
 
-### **Performance Benchmarks**
+### Performance Benchmarks
 - **First Contentful Paint**: < 1.5s
 - **Largest Contentful Paint**: < 2.5s
 - **First Input Delay**: < 100ms
@@ -213,16 +216,16 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ---
 
-## 🧪 **Testing & Quality Assurance**
+## 🧪 Testing & Quality Assurance
 
-### **Testing Strategy**
+### Testing Strategy
 - **Unit Testing**: Jest for JavaScript functions
 - **Integration Testing**: Cypress for user workflows
 - **Accessibility Testing**: axe-core for WCAG compliance
 - **Performance Testing**: Lighthouse for optimization metrics
 - **Cross-browser Testing**: BrowserStack for compatibility
 
-### **Quality Metrics**
+### Quality Metrics
 - **Code Coverage**: 90%+ target
 - **Accessibility Score**: AAA compliance
 - **Performance Score**: 95%+ Lighthouse score
@@ -230,25 +233,25 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ---
 
-## 🤝 **Contributing**
+## 🤝 Contributing
 
 We welcome contributions from educators, developers, and learning enthusiasts! Here's how you can contribute:
 
-### **Ways to Contribute**
-1. **🐛 Bug Reports**: Help us identify and fix issues
-2. **💡 Feature Suggestions**: Propose new educational features
-3. **📝 Documentation**: Improve our guides and tutorials
-4. **🎨 Design Improvements**: Enhance user experience
-5. **🔧 Code Contributions**: Implement new features or optimizations
+### Ways to Contribute
+1. 🐛 **Bug Reports**: Help us identify and fix issues
+2. 💡 **Feature Suggestions**: Propose new educational features
+3. 📝 **Documentation**: Improve our guides and tutorials
+4. 🎨 **Design Improvements**: Enhance user experience
+5. 🔧 **Code Contributions**: Implement new features or optimizations
 
-### **Getting Started**
+### Getting Started
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### **Development Environment Setup**
+### Development Environment Setup
 ```bash
 # Install development dependencies
 npm install
@@ -474,9 +477,4 @@ Ready to revolutionize education? Here's how you can get involved:
 
 ---
 
-**⚡ Powered by Innovation | 🎓 Driven by Education | 🌍 Built for Everyone**
-
-</div>
-#   s r u j a n a _ h a c k a t h o n _ c o d e p l a y s  
- #   s r u j a n a _ h a c k a t h o n _ c o d e p l a y s  
- 
+{{ ... }}
