@@ -1,0 +1,26 @@
+{
+  "name": "supabase-admin-panel",
+  "version": "1.0.0",
+  "description": "Supabase Admin Panel for User Management with Authentication",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . -l 3001",
+    "build": "echo 'No build step needed for vanilla JS'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "keywords": [
+    "supabase",
+    "admin",
+    "panel",
+    "authentication",
+    "user-management"
+  ],
+  "author": "Smart Tutor Dashboard",
+  "license": "MIT"
+}

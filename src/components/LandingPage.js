@@ -13,14 +13,10 @@ const LandingPage = () => {
           <h1>🎓 Smart Tutor Dashboard</h1>
           <p>Your personalized adaptive learning platform</p>
           
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <button 
-              className="btn btn--outline" 
-              onClick={() => navigate('/login')}
-              style={{ marginRight: '1rem' }}
-            >
-              Login
-            </button>
+          <div className="cta-buttons">
+            <button className="btn btn-primary" onClick={() => navigate('/login')}>Get Started</button>
+            <button className="btn btn-secondary" onClick={() => navigate('/signup')}>Learn More</button>
+            <button className="btn btn-admin" onClick={() => navigate('/admin')}>Admin Panel</button>
           </div>
           
           <div className="role-selection">

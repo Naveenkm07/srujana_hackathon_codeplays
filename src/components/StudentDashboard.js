@@ -1,57 +1,166 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../App';
-import ActivityChart from './charts/ActivityChart';
-import SubjectProgress from './student/SubjectProgress';
-import Achievements from './student/Achievements';
-import Resources from './student/Resources';
 import LearningModules from './student/LearningModules';
+import AnalyticsDashboard from './AnalyticsDashboard';
+import RecommendationCard from './RecommendationCard';
+import LoadingSpinner from './LoadingSpinner';
+import { LearningService } from '../services/supabaseClient';
+import ProgressChart from './charts/ProgressChart';
+import SubjectProgress from './charts/SubjectProgress';
+import ActivityChart from './charts/ActivityChart';
+import QuizCard from './student/QuizCard';
+import { useLocalStorage, useDebounceLocalStorage } from '../hooks/useLocalStorage';
+import { AnalyticsService, PerformanceMonitor, UserBehaviorTracker } from '../utils/analytics';
+import { FaUser, FaBook, FaChart, FaCog } from 'react-icons/fa';
+// Removed unused imports
 
-const StudentDashboard = () => {
-  const { currentUser, handleLogout, appData, setShowQuizModal, setCurrentQuiz } = useAppContext();
-  const [activeSection, setActiveSection] = useState('overview');
+function StudentDashboard() {
+  const { 
+    currentUser, 
+    appData, 
+    setCurrentQuiz, 
+    setShowQuizModal, 
+    setCurrentLesson,
+    setShowLessonModal,
+    handleLogout 
+  } = useAppContext();
   const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState('overview');
+  const [activeView, setActiveView] = useState('dashboard');
+  const [subjects, setSubjects] = useState([]);
+  const [userProgress, setUserProgress] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [recommendations, setRecommendations] = useLocalStorage('user_recommendations', []);
+  const [analytics, setAnalytics] = useState(null);
 
   useEffect(() => {
+    if (!currentUser) return;
+    
+    // Auto-redirect if not logged in or wrong role
     if (!currentUser || currentUser.role !== 'student') {
-      navigate('/');
+      handleLogout();
+      return;
     }
-  }, [currentUser, navigate]);
+
+    // Track page view
+    UserBehaviorTracker.trackPageView('student_dashboard');
+    AnalyticsService.trackUserEngagement('dashboard_visit', { userId: currentUser.id });
+
+    loadDashboardData();
+  }, [currentUser, handleLogout]);
+
+  const loadDashboardData = async () => {
+    setLoading(true);
+    
+    try {
+      // Load subjects
+      const { data: subjectsData, error: subjectsError } = await LearningService.getSubjects();
+      if (subjectsError) {
+        console.error('Error loading subjects:', subjectsError);
+        // Fallback to app data
+        setSubjects(appData.subjects);
+      } else {
+        setSubjects(subjectsData);
+      }
+
+      // Load user progress
+      if (currentUser.id) {
+        const { data: progressData, error: progressError } = await LearningService.getUserProgress(currentUser.id);
+        if (progressError) {
+          console.error('Error loading progress:', progressError);
+          // Fallback to current user progress
+          setUserProgress(currentUser.progress || {});
+        } else {
+          setUserProgress(progressData);
+        }
+      } else {
+        setUserProgress(currentUser.progress || {});
+      }
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+      // Fallback to app data
+      setSubjects(appData.subjects);
+      setUserProgress(currentUser.progress || {});
+      // Generate AI recommendations
+      generateRecommendations();
+      
+      // Load analytics
+      if (currentUser.id) {
+        const userAnalytics = AnalyticsService.getLearningAnalytics(currentUser.id);
+        setAnalytics(userAnalytics);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generateRecommendations = () => {
+    const newRecommendations = [];
+    
+    // Analyze progress and suggest next steps
+    Object.entries(userProgress).forEach(([subject, progress]) => {
+      if (progress < 50) {
+        newRecommendations.push({
+          type: 'continue',
+          title: `Continue with ${subject}`,
+          description: `You're ${progress}% through. Keep going to unlock advanced topics!`,
+          priority: 'high',
+          subject
+        });
+      } else if (progress >= 80) {
+        newRecommendations.push({
+          type: 'challenge',
+          title: `Take ${subject} Quiz`,
+          description: 'Test your knowledge with an advanced quiz.',
+          priority: 'medium',
+          subject
+        });
+      }
+    });
+
+    // Add streak motivation
+    if (currentUser.currentStreak >= 3) {
+      newRecommendations.push({
+        type: 'streak',
+        title: 'Keep Your Streak!',
+        description: `You're on a ${currentUser.currentStreak}-day streak! Study today to keep it going.`,
+        priority: 'high'
+      });
+    }
+
+    setRecommendations(newRecommendations.slice(0, 3));
+  };
 
   if (!currentUser) return null;
 
   const handleNavigation = (section) => {
+    UserBehaviorTracker.trackButtonClick('navigation', { section });
     setActiveSection(section);
   };
 
-  const startLesson = (lesson, subject) => {
-    // Simple quiz for demonstration
-    const quiz = {
-      questions: [{
-        question: `${subject.name} Question: What is the main concept in ${lesson.title}?`,
-        options: ['Option A - Basic principles', 'Option B - Advanced theories', 'Option C - Practical applications', 'Option D - Historical context'],
-        correct: 0
-      }],
-      currentIndex: 0
-    };
-    setCurrentQuiz(quiz);
+  const handleStartLesson = (lesson, subject) => {
+    // Track lesson start event
+    AnalyticsService.trackEvent('lesson_started', {
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      subjectId: subject.id,
+      subjectName: subject.name,
+      userId: currentUser?.id
+    });
+
+    // Track user behavior
+    UserBehaviorTracker.trackButtonClick('start_lesson', { 
+      lesson: lesson.title, 
+      subject: subject.name 
+    });
+
+    setCurrentLesson({ lesson, subject });
+    setShowLessonModal(true);
     setShowQuizModal(true);
   };
 
-  const recommendations = [
-    {
-      title: "Continue with Mathematics",
-      description: "You're making great progress! Complete the next algebra module."
-    },
-    {
-      title: "Practice Science Lab",
-      description: "Try the interactive chemistry experiments to reinforce concepts."
-    },
-    {
-      title: "Weekly Challenge",
-      description: "Join this week's spelling challenge to earn bonus points!"
-    }
-  ];
+  const startLesson = handleStartLesson;
 
   return (
     <div id="student-dashboard" className="page active">
@@ -171,7 +280,10 @@ const StudentDashboard = () => {
         {activeSection === 'resources' && (
           <div className="section active">
             <h2>Learning Resources</h2>
-            <Resources resources={appData.resources} />
+            <div className="resources-placeholder">
+              <h3>📚 Learning Resources</h3>
+              <p>Additional learning materials and resources coming soon...</p>
+            </div>
           </div>
         )}
 
@@ -179,10 +291,10 @@ const StudentDashboard = () => {
         {activeSection === 'achievements' && (
           <div className="section active">
             <h2>Your Achievements</h2>
-            <Achievements 
-              badges={appData.badges}
-              earnedBadges={currentUser.badges || []}
-            />
+            <div className="achievements-placeholder">
+              <h3>🏆 Achievements</h3>
+              <p>Your badges and accomplishments will appear here...</p>
+            </div>
           </div>
         )}
       </div>

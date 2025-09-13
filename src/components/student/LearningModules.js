@@ -1,27 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { LearningService } from '../../services/supabaseClient';
+import { useAppContext } from '../../App';
 
 const LearningModules = ({ subjects, userProgress, onStartLesson }) => {
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [lessons, setLessons] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { currentUser } = useAppContext();
 
-  const showSubjectModules = (subject) => {
+  const showSubjectModules = async (subject) => {
     setSelectedSubject(subject);
+    setLoading(true);
+    
+    try {
+      const { data, error } = await LearningService.getLessons(subject.id);
+      if (error) {
+        console.error('Error loading lessons:', error);
+      } else {
+        setLessons(data);
+      }
+    } catch (err) {
+      console.error('Failed to load lessons:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const backToSubjects = () => {
     setSelectedSubject(null);
+    setLessons([]);
+  };
+
+  const handleStartLesson = async (lesson, subject) => {
+    if (lesson.status === 'locked') return;
+    
+    // Update lesson status to in-progress if it was completed
+    if (currentUser && lesson.status !== 'in-progress') {
+      await LearningService.updateLessonProgress(currentUser.id, lesson.id, 'in-progress');
+    }
+    
+    onStartLesson(lesson, subject);
   };
 
   if (selectedSubject) {
     const progress = userProgress[selectedSubject.name] || 0;
-    
-    // Generate sample lessons
-    const lessons = [
-      { title: 'Introduction & Basics', status: 'completed' },
-      { title: 'Core Concepts', status: 'completed' },
-      { title: 'Practice Problems', status: 'in-progress' },
-      { title: 'Advanced Topics', status: 'locked' },
-      { title: 'Final Assessment', status: 'locked' }
-    ];
 
     return (
       <div className="module-container">
@@ -38,23 +60,30 @@ const LearningModules = ({ subjects, userProgress, onStartLesson }) => {
           <div className="module-progress-bar">
             <div className="progress-fill" style={{ width: `${progress}%` }}></div>
           </div>
-          <div className="module-lessons">
-            {lessons.map((lesson, index) => (
-              <div 
-                key={index} 
-                className={`lesson-item ${lesson.status !== 'locked' ? 'clickable' : ''}`}
-                onClick={() => lesson.status !== 'locked' && onStartLesson(lesson, selectedSubject)}
-              >
-                <div className="lesson-header">
-                  <span className="lesson-title">{lesson.title}</span>
-                  <span className={`lesson-status ${lesson.status}`}>
-                    {lesson.status.replace('-', ' ')}
-                  </span>
+          {loading ? (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Loading lessons...</p>
+            </div>
+          ) : (
+            <div className="module-lessons">
+              {lessons.map((lesson, index) => (
+                <div 
+                  key={lesson.id || index} 
+                  className={`lesson-item ${lesson.status !== 'locked' ? 'clickable' : ''}`}
+                  onClick={() => lesson.status !== 'locked' && handleStartLesson(lesson, selectedSubject)}
+                >
+                  <div className="lesson-header">
+                    <span className="lesson-title">{lesson.title}</span>
+                    <span className={`lesson-status ${lesson.status}`}>
+                      {lesson.status.replace('-', ' ')}
+                    </span>
+                  </div>
+                  <p>Estimated time: {lesson.duration || 25} minutes</p>
                 </div>
-                <p>Estimated time: {15 + Math.floor(Math.random() * 30)} minutes</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );

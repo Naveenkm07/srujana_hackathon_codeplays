@@ -5,9 +5,11 @@ import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
 import StudentDashboard from './components/StudentDashboard';
 import TeacherDashboard from './components/TeacherDashboard';
+import AdminDashboard from './components/AdminDashboard';
 import ProfileModal from './components/modals/ProfileModal';
 import AssessmentModal from './components/modals/AssessmentModal';
 import QuizModal from './components/modals/QuizModal';
+import LessonModal from './components/LessonModal';
 import { appData } from './data/appData';
 
 // Context for global state management
@@ -26,8 +28,10 @@ function App() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showAssessmentModal, setShowAssessmentModal] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
+  const [showLessonModal, setShowLessonModal] = useState(false);
   const [currentAssessment, setCurrentAssessment] = useState(null);
   const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [currentLesson, setCurrentLesson] = useState(null);
   const navigate = useNavigate();
 
   // Initialize app - check for existing user session
@@ -39,6 +43,8 @@ function App() {
         setCurrentUser(user);
         if (user.role === 'student') {
           navigate('/student');
+        } else if (user.role === 'admin') {
+          navigate('/admin');
         } else {
           navigate('/teacher');
         }
@@ -161,7 +167,11 @@ function App() {
     showQuizModal,
     setShowQuizModal,
     currentQuiz,
-    setCurrentQuiz
+    setCurrentQuiz,
+    showLessonModal,
+    setShowLessonModal,
+    currentLesson,
+    setCurrentLesson
   };
 
   return (
@@ -173,6 +183,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage onSignUp={handleLogin} />} />
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
         
         {showProfileModal && (
@@ -191,6 +202,14 @@ function App() {
           <QuizModal 
             quiz={currentQuiz}
             onClose={() => setShowQuizModal(false)}
+          />
+        )}
+        
+        {showLessonModal && currentLesson && (
+          <LessonModal 
+            lesson={currentLesson.lesson}
+            subject={currentLesson.subject}
+            onClose={() => setShowLessonModal(false)}
           />
         )}
       </div>
