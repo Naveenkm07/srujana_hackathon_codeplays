@@ -6,17 +6,30 @@ import SubjectProgress from './student/SubjectProgress';
 import Achievements from './student/Achievements';
 import Resources from './student/Resources';
 import LearningModules from './student/LearningModules';
+import GamificationStats from './GamificationStats';
 
 const StudentDashboard = () => {
-  const { currentUser, handleLogout, appData, setShowQuizModal, setCurrentQuiz } = useAppContext();
+  const { 
+    currentUser, 
+    handleLogout, 
+    appData, 
+    setShowQuizModal, 
+    setCurrentQuiz,
+    completeLesson,
+    completeQuiz,
+    updateStreak
+  } = useAppContext();
   const [activeSection, setActiveSection] = useState('overview');
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser || currentUser.role !== 'student') {
       navigate('/');
+    } else {
+      // Update streak when dashboard loads
+      updateStreak();
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, navigate, updateStreak]);
 
   if (!currentUser) return null;
 
@@ -25,6 +38,9 @@ const StudentDashboard = () => {
   };
 
   const startLesson = (lesson, subject) => {
+    // Award points for starting a lesson
+    completeLesson(subject.name, lesson.title, lesson.difficulty || 'medium');
+    
     // Simple quiz for demonstration
     const quiz = {
       questions: [{
@@ -32,11 +48,14 @@ const StudentDashboard = () => {
         options: ['Option A - Basic principles', 'Option B - Advanced theories', 'Option C - Practical applications', 'Option D - Historical context'],
         correct: 0
       }],
-      currentIndex: 0
+      currentIndex: 0,
+      subject: subject.name,
+      lessonTitle: lesson.title
     };
     setCurrentQuiz(quiz);
     setShowQuizModal(true);
   };
+
 
   const recommendations = [
     {
@@ -98,29 +117,8 @@ const StudentDashboard = () => {
         {activeSection === 'overview' && (
           <div className="section active">
             <div className="dashboard-grid">
-              <div className="stats-card">
-                <div className="stat">
-                  <div className="stat-icon">📊</div>
-                  <div className="stat-content">
-                    <h3>{currentUser.totalPoints || 0}</h3>
-                    <p>Total Points</p>
-                  </div>
-                </div>
-                <div className="stat">
-                  <div className="stat-icon">🏆</div>
-                  <div className="stat-content">
-                    <h3>{(currentUser.badges || []).length}</h3>
-                    <p>Badges Earned</p>
-                  </div>
-                </div>
-                <div className="stat">
-                  <div className="stat-icon">🔥</div>
-                  <div className="stat-content">
-                    <h3>{currentUser.currentStreak || 0}</h3>
-                    <p>Day Streak</p>
-                  </div>
-                </div>
-              </div>
+              {/* Enhanced Gamification Stats */}
+              <GamificationStats />
 
               <div className="card">
                 <div className="card__body">
