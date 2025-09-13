@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../App';
 
 const QuizModal = ({ quiz, onClose }) => {
-  const { currentUser, setCurrentUser } = useAppContext();
+  const { currentUser, completeQuiz } = useAppContext();
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [score, setScore] = useState(0);
 
   const currentQuestion = quiz.questions[quiz.currentIndex || 0];
 
@@ -12,15 +14,14 @@ const QuizModal = ({ quiz, onClose }) => {
   };
 
   const handleNext = () => {
-    // Award points and close quiz for demo
-    const updatedUser = {
-      ...currentUser,
-      totalPoints: (currentUser.totalPoints || 0) + 25
-    };
-    setCurrentUser(updatedUser);
-    localStorage.setItem('smartTutorUser', JSON.stringify(updatedUser));
+    // Calculate score
+    const isCorrect = selectedAnswer === currentQuestion.correct;
+    const newScore = isCorrect ? 1 : 0;
+    setScore(newScore);
+    setQuizCompleted(true);
     
-    onClose();
+    // Award points using gamification system
+    completeQuiz(newScore, 1, quiz.subject || 'General');
   };
 
   const handleOverlayClick = (e) => {
@@ -41,29 +42,54 @@ const QuizModal = ({ quiz, onClose }) => {
           <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
         <div className="modal-body">
-          <div id="quiz-question-container">
-            <h3>{currentQuestion?.question}</h3>
-            <div id="quiz-options">
-              {currentQuestion?.options.map((option, index) => (
-                <div 
-                  key={index}
-                  className={`quiz-option ${selectedAnswer === index ? 'selected' : ''}`}
-                  onClick={() => handleAnswerSelect(index)}
-                >
-                  {option}
+          {!quizCompleted ? (
+            <>
+              <div id="quiz-question-container">
+                <h3>{currentQuestion?.question}</h3>
+                <div id="quiz-options">
+                  {currentQuestion?.options.map((option, index) => (
+                    <div 
+                      key={index}
+                      className={`quiz-option ${selectedAnswer === index ? 'selected' : ''}`}
+                      onClick={() => handleAnswerSelect(index)}
+                    >
+                      {option}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              <div className="quiz-actions">
+                <button 
+                  className="btn btn--primary" 
+                  disabled={selectedAnswer === null}
+                  onClick={handleNext}
+                >
+                  Submit Answer
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="quiz-results">
+              <div className="result-icon">
+                {score === 1 ? '🎉' : '😊'}
+              </div>
+              <h3>{score === 1 ? 'Correct!' : 'Good try!'}</h3>
+              <p>You scored {score}/1 on this quiz!</p>
+              <p className="points-earned">
+                +{score === 1 ? '80' : '30'} points earned!
+              </p>
+              <div className="correct-answer">
+                <strong>Correct Answer:</strong> {currentQuestion?.options[currentQuestion?.correct]}
+              </div>
+              <button 
+                className="btn btn--primary" 
+                onClick={onClose}
+                style={{ marginTop: '20px' }}
+              >
+                Continue Learning! 🚀
+              </button>
             </div>
-          </div>
-          <div className="quiz-actions">
-            <button 
-              className="btn btn--primary" 
-              disabled={selectedAnswer === null}
-              onClick={handleNext}
-            >
-              Complete
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </div>
