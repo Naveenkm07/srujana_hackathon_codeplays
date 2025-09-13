@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tutor Dashboard - Adaptive Learning Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="page active">
+        <div class="container">
+            <div class="landing-hero">
+                <h1>🎓 Smart Tutor Dashboard</h1>
+                <p>Your personalized adaptive learning platform</p>
+                <div class="role-selection">
+                    <h2>Choose Your Role</h2>
+                    <div class="role-cards">
+                        <div class="role-card">
+                            <div class="role-icon">👨‍🎓</div>
+                            <h3>Student</h3>
+                            <p>Access personalized learning paths, track progress, and earn achievements</p>
+                            <button class="btn btn--primary" data-role="student">Continue as Student</button>
+                        </div>
+                        <div class="role-card">
+                            <div class="role-icon">👩‍🏫</div>
+                            <h3>Teacher</h3>
+                            <p>Monitor student progress, create assessments, and analyze performance</p>
+                            <button class="btn btn--primary" data-role="teacher">Continue as Teacher</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Setup Modal -->
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Profile Setup</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Full Name *</label>
+                        <input type="text" id="name" class="form-control" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="grade">Grade Level *</label>
+                        <select id="grade" class="form-control" required>
+                            <option value="">Select Grade</option>
+                            <option value="6">Grade 6</option>
+                            <option value="7">Grade 7</option>
+                            <option value="8">Grade 8</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="student-subjects" style="display: none;">
+                        <label class="form-label">Favorite Subjects (Optional)</label>
+                        <div class="checkbox-group" id="subjects-list"></div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn--primary btn--full-width">Complete Setup</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagnostic Assessment Modal -->
+    <div id="assessment-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Diagnostic Assessment</h2>
+                <p>This quick assessment will help us personalize your learning path</p>
+            </div>
+            <div class="modal-body">
+                <div id="assessment-content">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="assessment-progress"></div>
+                    </div>
+                    <div id="question-container"></div>
+                </div>
+                <div id="assessment-results" style="display: none;">
+                    <h3>Assessment Complete! 🎉</h3>
+                    <div id="results-summary"></div>
+                    <button class="btn btn--primary" id="start-learning">Start Learning</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="student-dashboard" class="page hidden">
+        <nav class="dashboard-nav">
+            <div class="nav-brand">
+                <h2>🎓 Smart Tutor</h2>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-item active" data-section="overview">Overview</button>
+                <button class="nav-item" data-section="learning">Learning</button>
+                <button class="nav-item" data-section="resources">Resources</button>
+                <button class="nav-item" data-section="achievements">Achievements</button>
+            </div>
+            <div class="nav-user">
+                <span id="student-name">Student</span>
+                <button class="btn btn--secondary btn--sm" id="logout-btn">Logout</button>
+            </div>
+        </nav>
+
+        <div class="dashboard-content">
+            <!-- Overview Section -->
+            <div id="overview-section" class="section active">
+                <div class="dashboard-grid">
+                    <div class="stats-card">
+                        <div class="stat">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-content">
+                                <h3 id="total-points">0</h3>
+                                <p>Total Points</p>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-content">
+                                <h3 id="badges-count">0</h3>
+                                <p>Badges Earned</p>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-icon">🔥</div>
+                            <div class="stat-content">
+                                <h3 id="current-streak">0</h3>
+                                <p>Day Streak</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Subject Progress</h3>
+                            <div id="subject-progress"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Weekly Activity</h3>
+                            <div class="chart-container" style="position: relative; height: 200px;">
+                                <canvas id="activity-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Recommended Next</h3>
+                            <div id="recommendations"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Section -->
+            <div id="learning-section" class="section hidden">
+                <h2>Learning Modules</h2>
+                <div class="subjects-grid" id="subjects-grid"></div>
+                
+                <div id="module-view" class="module-container" style="display: none;">
+                    <div class="module-header">
+                        <button class="btn btn--outline" id="back-to-subjects">← Back to Subjects</button>
+                        <div class="module-info">
+                            <h2 id="module-title"></h2>
+                            <p id="module-description"></p>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <div class="module-progress-bar">
+                            <div class="progress-fill" id="module-progress"></div>
+                        </div>
+                        <div id="module-lessons"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div id="resources-section" class="section hidden">
+                <h2>Learning Resources</h2>
+                <div class="resources-grid" id="resources-grid"></div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div id="achievements-section" class="section hidden">
+                <h2>Your Achievements</h2>
+                <div class="achievements-container">
+                    <div class="earned-badges">
+                        <h3>Earned Badges</h3>
+                        <div class="badges-grid" id="earned-badges"></div>
+                    </div>
+                    <div class="available-badges">
+                        <h3>Available Badges</h3>
+                        <div class="badges-grid" id="available-badges"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacher-dashboard" class="page hidden">
+        <nav class="dashboard-nav">
+            <div class="nav-brand">
+                <h2>🎓 Smart Tutor - Teacher</h2>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-item active" data-section="teacher-overview">Overview</button>
+                <button class="nav-item" data-section="students">Students</button>
+                <button class="nav-item" data-section="analytics">Analytics</button>
+                <button class="nav-item" data-section="content">Content</button>
+            </div>
+            <div class="nav-user">
+                <span id="teacher-name">Teacher</span>
+                <button class="btn btn--secondary btn--sm" id="teacher-logout-btn">Logout</button>
+            </div>
+        </nav>
+
+        <div class="dashboard-content">
+            <!-- Teacher Overview -->
+            <div id="teacher-overview-section" class="section active">
+                <div class="teacher-stats">
+                    <div class="stat-card">
+                        <h3>24</h3>
+                        <p>Total Students</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>78%</h3>
+                        <p>Average Progress</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>156</h3>
+                        <p>Modules Completed</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>92%</h3>
+                        <p>Student Engagement</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Class Performance Overview</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="class-performance-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Recent Activity</h3>
+                            <div id="recent-activity">
+                                <div class="activity-item">
+                                    <span class="activity-icon">✅</span>
+                                    <div class="activity-content">
+                                        <p><strong>Emma Davis</strong> completed Algebra Basics</p>
+                                        <small>2 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <span class="activity-icon">🎯</span>
+                                    <div class="activity-content">
+                                        <p><strong>Alex Johnson</strong> earned Quiz Master badge</p>
+                                        <small>4 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <span class="activity-icon">📚</span>
+                                    <div class="activity-content">
+                                        <p><strong>Sam Wilson</strong> started Basic Arithmetic</p>
+                                        <small>6 hours ago</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Section -->
+            <div id="students-section" class="section hidden">
+                <h2>Student Management</h2>
+                <div class="students-grid" id="students-grid"></div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics-section" class="section hidden">
+                <h2>Class Analytics</h2>
+                <div class="analytics-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Subject Performance Distribution</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="subject-distribution-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Weekly Engagement</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="engagement-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div id="content-section" class="section hidden">
+                <h2>Content Management</h2>
+                <div class="content-management">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Available Modules</h3>
+                            <div id="modules-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="quiz-title">Quiz</h2>
+                <div class="quiz-progress">
+                    <span id="quiz-question-counter">1/5</span>
+                </div>
+                <button class="modal-close" id="quiz-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="quiz-question-container">
+                    <h3 id="quiz-question"></h3>
+                    <div id="quiz-options"></div>
+                </div>
+                <div class="quiz-actions">
+                    <button class="btn btn--outline" id="quiz-prev" style="display: none;">Previous</button>
+                    <button class="btn btn--primary" id="quiz-next">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
