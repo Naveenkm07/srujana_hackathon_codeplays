@@ -1,0 +1,175 @@
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
+import StudentDashboard from './components/StudentDashboard';
+import TeacherDashboard from './components/TeacherDashboard';
+import ProfileModal from './components/modals/ProfileModal';
+import AssessmentModal from './components/modals/AssessmentModal';
+import QuizModal from './components/modals/QuizModal';
+import { appData } from './data/appData';
+
+// Context for global state management
+const AppContext = createContext();
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useAppContext must be used within AppProvider');
+  }
+  return context;
+};
+
+function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showAssessmentModal, setShowAssessmentModal] = useState(false);
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [currentAssessment, setCurrentAssessment] = useState(null);
+  const [currentQuiz, setCurrentQuiz] = useState(null);
+  const navigate = useNavigate();
+
+  // Initialize app - check for existing user session
+  useEffect(() => {
+    const savedUser = localStorage.getItem('smartTutorUser');
+    if (savedUser) {
+      try {
+        const user = JSON.parse(savedUser);
+        setCurrentUser(user);
+        if (user.role === 'student') {
+          navigate('/student');
+        } else {
+          navigate('/teacher');
+        }
+      } catch (e) {
+        localStorage.removeItem('smartTutorUser');
+        navigate('/');
+      }
+    }
+  }, [navigate]);
+
+  const handleRoleSelection = (role) => {
+    setCurrentUser({ role });
+    setShowProfileModal(true);
+  };
+
+  const handleProfileSetup = (profileData) => {
+    const updatedUser = { ...currentUser, ...profileData };
+    
+    if (updatedUser.role === 'student') {
+      // Initialize student data
+      updatedUser.totalPoints = 120;
+      updatedUser.badges = [1];
+      updatedUser.progress = {};
+      updatedUser.currentStreak = 3;
+      updatedUser.weeklyActivity = [2, 3, 1, 4, 2, 3, 2];
+      
+      // Initialize progress for all subjects
+      appData.subjects.forEach(subject => {
+        updatedUser.progress[subject.name] = Math.floor(Math.random() * 40) + 10;
+      });
+    }
+    
+    setCurrentUser(updatedUser);
+    localStorage.setItem('smartTutorUser', JSON.stringify(updatedUser));
+    setShowProfileModal(false);
+    
+    if (updatedUser.role === 'student') {
+      startDiagnosticAssessment();
+    } else {
+      navigate('/teacher');
+    }
+  };
+
+  const startDiagnosticAssessment = () => {
+    const assessment = {
+      questions: [...appData.diagnosticQuestions],
+      currentQuestionIndex: 0,
+      answers: [],
+      score: 0
+    };
+    setCurrentAssessment(assessment);
+    setShowAssessmentModal(true);
+  };
+
+  const completeAssessment = (score, percentage) => {
+    let level = 'Beginner';
+    if (percentage >= 80) level = 'Advanced';
+    else if (percentage >= 60) level = 'Intermediate';
+    
+    const updatedUser = {
+      ...currentUser,
+      level,
+      assessmentScore: percentage
+    };
+    
+    // Update progress based on assessment
+    appData.subjects.forEach(subject => {
+      const baseProgress = updatedUser.progress[subject.name] || 20;
+      const bonus = Math.floor(percentage / 4);
+      updatedUser.progress[subject.name] = Math.min(95, baseProgress + bonus);
+    });
+    
+    setCurrentUser(updatedUser);
+    localStorage.setItem('smartTutorUser', JSON.stringify(updatedUser));
+  };
+
+  const startLearning = () => {
+    setShowAssessmentModal(false);
+    navigate('/student');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('smartTutorUser');
+    setCurrentUser(null);
+    navigate('/');
+  };
+
+  const contextValue = {
+    currentUser,
+    setCurrentUser,
+    appData,
+    handleRoleSelection,
+    handleProfileSetup,
+    startDiagnosticAssessment,
+    completeAssessment,
+    startLearning,
+    handleLogout,
+    showQuizModal,
+    setShowQuizModal,
+    currentQuiz,
+    setCurrentQuiz
+  };
+
+  return (
+    <AppContext.Provider value={contextValue}>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/student" element={<StudentDashboard />} />
+          <Route path="/teacher" element={<TeacherDashboard />} />
+        </Routes>
+        
+        {showProfileModal && (
+          <ProfileModal onClose={() => setShowProfileModal(false)} />
+        )}
+        
+        {showAssessmentModal && currentAssessment && (
+          <AssessmentModal 
+            assessment={currentAssessment}
+            setAssessment={setCurrentAssessment}
+            onClose={() => setShowAssessmentModal(false)}
+          />
+        )}
+        
+        {showQuizModal && currentQuiz && (
+          <QuizModal 
+            quiz={currentQuiz}
+            onClose={() => setShowQuizModal(false)}
+          />
+        )}
+      </div>
+    </AppContext.Provider>
+  );
+}
+
+export default App;
