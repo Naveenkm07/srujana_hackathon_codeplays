@@ -1,6 +1,8 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
+import LoginPage from './components/LoginPage';
+import SignUpPage from './components/SignUpPage';
 import StudentDashboard from './components/StudentDashboard';
 import TeacherDashboard from './components/TeacherDashboard';
 import ProfileModal from './components/modals/ProfileModal';
@@ -118,6 +120,27 @@ function App() {
     navigate('/student');
   };
 
+  const handleLogin = (userData) => {
+    const user = {
+      ...userData,
+      totalPoints: 120,
+      badges: [1],
+      progress: {},
+      currentStreak: 3,
+      weeklyActivity: [2, 3, 1, 4, 2, 3, 2],
+      level: 'Intermediate',
+      assessmentScore: 75
+    };
+    
+    // Initialize progress for all subjects
+    appData.subjects.forEach(subject => {
+      user.progress[subject.name] = Math.floor(Math.random() * 40) + 30;
+    });
+    
+    setCurrentUser(user);
+    localStorage.setItem('smartTutorUser', JSON.stringify(user));
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('smartTutorUser');
     setCurrentUser(null);
@@ -133,6 +156,7 @@ function App() {
     startDiagnosticAssessment,
     completeAssessment,
     startLearning,
+    handleLogin,
     handleLogout,
     showQuizModal,
     setShowQuizModal,
@@ -145,6 +169,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/signup" element={<SignUpPage onSignUp={handleLogin} />} />
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
         </Routes>
