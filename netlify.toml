@@ -1,6 +1,6 @@
 [build]
   publish = "build"
-  command = "npm run build"
+  command = "CI=false npm run build"
 
 [[redirects]]
   from = "/*"
@@ -9,6 +9,7 @@
 
 [build.environment]
   REACT_APP_ENV = "production"
+  CI = "false"
 
 # Headers for security
 [[headers]]
