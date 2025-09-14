@@ -29,3 +29,6 @@ yarn-error.log*
 
 # OS
 Thumbs.db
+
+# Exclude C-Module-py-java as it's a separate project
+/C-Module-py-java/
