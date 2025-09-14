@@ -7,7 +7,7 @@ import SubjectProgress from './charts/SubjectProgress';
 import ActivityChart from './charts/ActivityChart';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { AnalyticsService, UserBehaviorTracker } from '../utils/analytics';
-import { FaBook, FaChartLine, FaTrophy, FaChartBar, FaUser, FaCog, FaCalendarAlt, FaBullseye, FaChevronLeft, FaChevronRight, FaTimes, FaGamepad, FaCode, FaPlay, FaRedo, FaLightbulb, FaFire, FaSave, FaCheckCircle } from 'react-icons/fa';
+import { FaBook, FaChartLine, FaTrophy, FaChartBar, FaUser, FaCog, FaCalendarAlt, FaBullseye, FaChevronLeft, FaChevronRight, FaTimes, FaGamepad, FaCode, FaPlay, FaRedo, FaLightbulb, FaFire, FaSave, FaCheckCircle, FaRobot, FaPuzzlePiece } from 'react-icons/fa';
 import ThemeToggle from './ThemeToggle';
 import Introduction from './cmodules/Introduction';
 import Variables from './cmodules/Variables';
@@ -39,6 +39,11 @@ import PythonLoops from './cmodules/PythonLoops';
 import PythonLists from './cmodules/PythonLists';
 import PythonStrings from './cmodules/PythonStrings';
 import PythonFunctions from './cmodules/PythonFunctions';
+import AiChartTab from '../features/ai-chart';
+import EnhancedGamesSection from './EnhancedGamesSection';
+import LearningResources from './LearningResources';
+import EnhancedAchievements from './EnhancedAchievements';
+import EnhancedLearning from './EnhancedLearning';
 
 // Constants
 const DASHBOARD_SECTIONS = {
@@ -48,6 +53,8 @@ const DASHBOARD_SECTIONS = {
   ACHIEVEMENTS: 'achievements',
   CHALLENGES: 'challenges',
   CMODULES: 'cmodules',
+  AI_CHARTS: 'ai-charts',
+  GAMES: 'games',
   PROFILE: 'profile'
 };
 
@@ -243,6 +250,20 @@ function StudentDashboard() {
             C-Modules
           </button>
           <button 
+            className={`nav-item ${activeSection === DASHBOARD_SECTIONS.AI_CHARTS ? 'active' : ''}`}
+            onClick={() => setActiveSection(DASHBOARD_SECTIONS.AI_CHARTS)}
+          >
+            <FaRobot className="nav-icon" />
+            AI Charts
+          </button>
+          <button 
+            className={`nav-item ${activeSection === DASHBOARD_SECTIONS.GAMES ? 'active' : ''}`}
+            onClick={() => setActiveSection(DASHBOARD_SECTIONS.GAMES)}
+          >
+            <FaPuzzlePiece className="nav-icon" />
+            Games
+          </button>
+          <button 
             className={`nav-item ${activeSection === DASHBOARD_SECTIONS.PROFILE ? 'active' : ''}`}
             onClick={() => handleNavigation(DASHBOARD_SECTIONS.PROFILE)}
           >
@@ -269,21 +290,20 @@ function StudentDashboard() {
 
         {/* Learning Section */}
         {activeSection === DASHBOARD_SECTIONS.LEARNING && (
-          <LearningSection 
-            subjects={subjects}
-            userProgress={userProgress}
-            onStartLesson={handleStartLesson}
+          <EnhancedLearning 
+            currentUser={currentUser} 
+            onProgress={handleProgress}
           />
         )}
 
         {/* Resources Section */}
         {activeSection === DASHBOARD_SECTIONS.RESOURCES && (
-          <ResourcesSection />
+          <LearningResources currentUser={currentUser} />
         )}
 
         {/* Achievements Section */}
         {activeSection === DASHBOARD_SECTIONS.ACHIEVEMENTS && (
-          <AchievementsSection currentUser={currentUser} />
+          <EnhancedAchievements currentUser={currentUser} playerStats={currentUser} />
         )}
 
         {/* Challenges Section */}
@@ -295,6 +315,14 @@ function StudentDashboard() {
         {activeSection === DASHBOARD_SECTIONS.CMODULES && (
           <CModulesSection currentUser={currentUser} />
         )}
+
+        {/* AI Charts Section */}
+        {activeSection === DASHBOARD_SECTIONS.AI_CHARTS && (
+          <AiChartTab />
+        )}
+
+        {/* Games Section */}
+        {activeSection === DASHBOARD_SECTIONS.GAMES && <EnhancedGamesSection currentUser={currentUser} />}
 
         {/* Profile Section */}
         {activeSection === DASHBOARD_SECTIONS.PROFILE && (

@@ -9,8 +9,12 @@ import ProfileModal from './components/modals/ProfileModal';
 import AssessmentModal from './components/modals/AssessmentModal';
 import QuizModal from './components/modals/QuizModal';
 import LessonModal from './components/LessonModal';
+import TopicSelectionModal from './components/TopicSelectionModal';
+import QuestionInterface from './components/QuestionInterface';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { appData } from './data/appData';
+import './components/TopicSelectionModal.css';
+import './components/QuestionInterface.css';
 import './index.css';
 
 // Context for global state management
@@ -30,9 +34,12 @@ function App() {
   const [showAssessmentModal, setShowAssessmentModal] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [showLessonModal, setShowLessonModal] = useState(false);
+  const [showTopicSelectionModal, setShowTopicSelectionModal] = useState(false);
+  const [showQuestionInterface, setShowQuestionInterface] = useState(false);
   const [currentAssessment, setCurrentAssessment] = useState(null);
   const [currentQuiz, setCurrentQuiz] = useState(null);
   const [currentLesson, setCurrentLesson] = useState(null);
+  const [userPreferences, setUserPreferences] = useState(null);
   const [hasNavigated, setHasNavigated] = useState(false);
   const navigate = useNavigate();
 
@@ -162,32 +169,26 @@ function App() {
   const handleLogin = (userData) => {
     const user = {
       ...userData,
-      totalPoints: 120,
-      badges: [1],
+      totalPoints: 0,
+      badges: [],
       progress: {},
-      currentStreak: 3,
-      weeklyActivity: [2, 3, 1, 4, 2, 3, 2],
-      level: 'Intermediate',
-      assessmentScore: 75
+      currentStreak: 0,
+      weeklyActivity: [0, 0, 0, 0, 0, 0, 0],
+      level: 'basic',
+      assessmentScore: 0,
+      sessionStats: {
+        totalQuestions: 0,
+        correctAnswers: 0,
+        totalPoints: 0,
+        averageTime: 0
+      }
     };
-    
-    // Initialize progress for all subjects
-    appData.subjects.forEach(subject => {
-      user.progress[subject.name] = Math.floor(Math.random() * 40) + 30;
-    });
     
     setCurrentUser(user);
     localStorage.setItem('smartTutorUser', JSON.stringify(user));
-    setHasNavigated(true);
     
-    // Navigate immediately without setTimeout
-    if (user.role === 'student') {
-      navigate('/student', { replace: true });
-    } else if (user.role === 'admin') {
-      navigate('/admin', { replace: true });
-    } else {
-      navigate('/student', { replace: true });
-    }
+    // Show topic selection modal instead of navigating directly
+    setShowTopicSelectionModal(true);
   };
 
   const handleLogout = () => {
@@ -216,6 +217,43 @@ function App() {
     setCurrentQuiz(null);
   };
 
+  // Handle topic selection completion
+  const handleTopicSelectionComplete = (preferences) => {
+    setUserPreferences(preferences);
+    const updatedUser = {
+      ...currentUser,
+      preferences
+    };
+    setCurrentUser(updatedUser);
+    localStorage.setItem('smartTutorUser', JSON.stringify(updatedUser));
+    setShowTopicSelectionModal(false);
+    setShowQuestionInterface(true);
+    setHasNavigated(true);
+    navigate('/questions', { replace: true });
+  };
+
+  // Handle answer submission and progress tracking
+  const handleAnswerSubmit = (answerData) => {
+    const updatedUser = {
+      ...currentUser,
+      totalPoints: answerData.sessionStats.totalPoints,
+      level: answerData.newLevel || currentUser.level,
+      sessionStats: answerData.sessionStats
+    };
+    setCurrentUser(updatedUser);
+    localStorage.setItem('smartTutorUser', JSON.stringify(updatedUser));
+  };
+
+  // Handle level updates
+  const handleLevelUpdate = (newLevel) => {
+    const updatedUser = {
+      ...currentUser,
+      level: newLevel
+    };
+    setCurrentUser(updatedUser);
+    localStorage.setItem('smartTutorUser', JSON.stringify(updatedUser));
+  };
+
   const contextValue = {
     currentUser,
     setCurrentUser,
@@ -234,7 +272,10 @@ function App() {
     showLessonModal,
     setShowLessonModal,
     currentLesson,
-    setCurrentLesson
+    setCurrentLesson,
+    userPreferences,
+    handleAnswerSubmit,
+    handleLevelUpdate
   };
 
   return (
@@ -246,7 +287,18 @@ function App() {
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
             <Route path="/signup" element={<SignUpPage onSignUp={handleLogin} />} />
             <Route path="/student" element={<StudentDashboard />} />
-            {/* <Route path="/teacher" element={<TeacherDashboard />} /> */} {/* Teacher feature temporarily disabled */}
+            <Route path="/questions" element={
+              showQuestionInterface ? (
+                <QuestionInterface 
+                  userPreferences={userPreferences}
+                  onAnswerSubmit={handleAnswerSubmit}
+                  onLevelUpdate={handleLevelUpdate}
+                  currentUser={currentUser}
+                />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } />
           </Routes>
 
           {showProfileModal && (
@@ -279,6 +331,18 @@ function App() {
               lesson={currentLesson.lesson}
               subject={currentLesson.subject}
               onClose={() => setShowLessonModal(false)}
+            />
+          )}
+
+          {showTopicSelectionModal && (
+            <TopicSelectionModal 
+              isOpen={showTopicSelectionModal}
+              onClose={() => {
+                setShowTopicSelectionModal(false);
+                handleLogout(); // Logout if user cancels topic selection
+              }}
+              onComplete={handleTopicSelectionComplete}
+              userEmail={currentUser?.email}
             />
           )}
         </div>
