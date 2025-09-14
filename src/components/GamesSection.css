@@ -4,7 +4,7 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-blue-500) 0%, var(--color-purple-600) 100%);
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -49,7 +49,7 @@
   align-items: center;
   justify-content: center;
   gap: 15px;
-  color: #ffffff;
+  color: var(--color-white);
   font-family: 'Orbitron', monospace;
   font-size: 36px;
   font-weight: 900;
@@ -59,9 +59,9 @@
 }
 
 .section-icon {
-  color: #00f5ff;
+  color: var(--color-blue-100);
   animation: pulse 2s infinite;
-  filter: drop-shadow(0 0 10px #00f5ff);
+  filter: drop-shadow(0 0 10px var(--color-blue-100));
 }
 
 @keyframes pulse {

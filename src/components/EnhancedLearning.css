@@ -1,9 +1,9 @@
 /* Enhanced Learning Styles */
 .enhanced-learning {
   padding: 2rem;
-  background: linear-gradient(135deg, #0f1419 0%, #1a1a2e 50%, #16213e 100%);
+  background: var(--color-background);
   min-height: 100vh;
-  color: #ffffff;
+  color: var(--color-text);
   position: relative;
   overflow-x: hidden;
 }
@@ -14,13 +14,14 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 3rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-surface);
   backdrop-filter: blur(15px);
   border-radius: 25px;
   padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-card-border);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-lg);
 }
 
 .learning-header::before {
@@ -30,9 +31,9 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: conic-gradient(from 0deg, #3498db, #e74c3c, #f39c12, #9b59b6, #3498db);
+  background: conic-gradient(from 0deg, var(--color-blue-500), var(--color-red-500), var(--color-orange-500), var(--color-purple-500), var(--color-blue-500));
   animation: rotate 20s linear infinite;
-  opacity: 0.1;
+  opacity: 0.05;
   z-index: -1;
 }
 
@@ -44,12 +45,11 @@
 .header-content h2 {
   font-size: 2.8rem;
   font-weight: 800;
-  background: linear-gradient(45deg, #3498db, #e74c3c, #f39c12);
+  background: linear-gradient(45deg, var(--color-blue-600), var(--color-purple-600), var(--color-indigo-600));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 1.5rem;
-  text-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
 }
 
 .learning-stats {
@@ -62,22 +62,22 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-bg-1);
   padding: 1rem 1.5rem;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--color-card-border);
   transition: all 0.3s ease;
   position: relative;
 }
 
 .stat-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .stat-icon {
   font-size: 1.5rem;
-  color: #3498db;
+  color: var(--color-primary);
 }
 
 .stat-info {
