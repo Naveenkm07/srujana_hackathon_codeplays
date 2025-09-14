@@ -38,33 +38,85 @@ const AssessmentModal = ({ assessment, setAssessment, onClose }) => {
   };
 
   const getLevel = (percentage) => {
-    if (percentage >= 80) return 'Advanced';
-    if (percentage >= 60) return 'Intermediate';
+    if (percentage >= 85) return 'Advanced';
+    if (percentage >= 65) return 'Intermediate';
     return 'Beginner';
+  };
+
+  const getLevelDescription = (percentage) => {
+    if (percentage >= 85) {
+      return 'Excellent! You have strong programming fundamentals.';
+    } else if (percentage >= 65) {
+      return 'Good job! You have solid basic knowledge.';
+    } else if (percentage >= 40) {
+      return 'Great start! We\'ll help you build strong foundations.';
+    } else {
+      return 'No worries! Everyone starts somewhere. Let\'s learn together.';
+    }
   };
 
   if (showResults) {
     const percentage = Math.round((assessment.score / assessment.questions.length) * 100);
     const level = getLevel(percentage);
+    const levelDescription = getLevelDescription(percentage);
     
     return (
       <div className="modal">
         <div className="modal-overlay"></div>
         <div className="modal-content">
           <div className="modal-header">
-            <h2>Diagnostic Assessment</h2>
-            <p>This quick assessment will help us personalize your learning path</p>
+            <h2>🎯 Programming Skills Assessment</h2>
+            <p>Your personalized learning path is ready!</p>
           </div>
           <div className="modal-body">
-            <div id="assessment-results">
-              <h3>Assessment Complete! 🎉</h3>
-              <div className="assessment-result">
-                <h4>Your Level: {level}</h4>
-                <p>Score: {percentage}% ({assessment.score}/{assessment.questions.length} correct)</p>
-                <p>Based on your performance, we've created a personalized learning path for you!</p>
+            <div id="assessment-results" className="text-center">
+              <div className="level-badge">
+                <div className={`level-icon level-${level.toLowerCase()}`}>
+                  {level === 'Advanced' ? '🚀' : level === 'Intermediate' ? '⭐' : '🌱'}
+                </div>
+                <h3>Your Skill Level: <strong>{level}</strong></h3>
               </div>
-              <button className="btn btn--primary" onClick={startLearning}>
-                Start Learning
+              
+              <div className="score-display">
+                <div className="score-circle">
+                  <span className="percentage">{percentage}%</span>
+                  <span className="score-text">{assessment.score}/{assessment.questions.length} correct</span>
+                </div>
+              </div>
+              
+              <div className="level-description">
+                <p>{levelDescription}</p>
+              </div>
+              
+              <div className="assessment-summary">
+                <h4>What this means:</h4>
+                <ul className="level-features">
+                  {level === 'Advanced' && (
+                    <>
+                      <li>✅ Access to advanced programming concepts</li>
+                      <li>✅ Complex project-based learning</li>
+                      <li>✅ Expert-level challenges</li>
+                    </>
+                  )}
+                  {level === 'Intermediate' && (
+                    <>
+                      <li>✅ Intermediate programming concepts</li>
+                      <li>✅ Hands-on coding exercises</li>
+                      <li>✅ Practical project building</li>
+                    </>
+                  )}
+                  {level === 'Beginner' && (
+                    <>
+                      <li>✅ Step-by-step fundamentals</li>
+                      <li>✅ Interactive coding tutorials</li>
+                      <li>✅ Supportive learning environment</li>
+                    </>
+                  )}
+                </ul>
+              </div>
+              
+              <button className="btn btn--primary btn--large" onClick={startLearning}>
+                🎓 Start My Learning Journey
               </button>
             </div>
           </div>

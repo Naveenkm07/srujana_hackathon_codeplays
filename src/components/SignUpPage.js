@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = ({ onSignUp }) => {
@@ -39,17 +39,7 @@ const SignUpPage = ({ onSignUp }) => {
     }
   };
 
-  useEffect(() => {
-    // Initialize Google Identity Services
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-        callback: handleGoogleResponse
-      });
-    }
-  }, []);
-
-  const handleGoogleResponse = (response) => {
+  const handleGoogleResponse = useCallback((response) => {
     try {
       // Decode the JWT token to get user info
       const userObject = JSON.parse(atob(response.credential.split('.')[1]));
@@ -66,7 +56,17 @@ const SignUpPage = ({ onSignUp }) => {
     } catch (error) {
       console.error('Google signup error:', error);
     }
-  };
+  }, [onSignUp, navigate]);
+
+  useEffect(() => {
+    // Initialize Google Identity Services
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse
+      });
+    }
+  }, [handleGoogleResponse]);
 
   const handleGoogleSignUp = () => {
     if (window.google) {

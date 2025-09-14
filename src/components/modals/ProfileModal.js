@@ -34,10 +34,11 @@ const ProfileModal = ({ onClose }) => {
       return;
     }
     
-    if (!formData.grade) {
-      alert('Please select your grade level');
-      return;
-    }
+    // Temporarily disabled grade requirement
+    // if (!formData.grade) {
+    //   alert('Please select your grade level');
+    //   return;
+    // }
     
     handleProfileSetup(formData);
   };
@@ -82,13 +83,13 @@ const ProfileModal = ({ onClose }) => {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="grade">Grade Level *</label>
+            {/* Temporarily disabled grade selection */}
+            {/* <div className="form-group">
+              <label className="form-label" htmlFor="grade">Grade Level (Optional)</label>
               <select 
                 id="grade" 
                 name="grade"
                 className="form-control" 
-                required
                 value={formData.grade}
                 onChange={handleInputChange}
               >
@@ -101,7 +102,7 @@ const ProfileModal = ({ onClose }) => {
                 <option value="11">Grade 11</option>
                 <option value="12">Grade 12</option>
               </select>
-            </div>
+            </div> */}
             {currentUser?.role === 'student' && (
               <div className="form-group">
                 <label className="form-label">Favorite Subjects (Optional)</label>

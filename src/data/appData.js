@@ -1,40 +1,42 @@
 export const appData = {
   subjects: [
-    {"id": 1, "name": "Mathematics", "icon": "🧮", "modules": 12, "difficulty": "Beginner to Advanced"},
-    {"id": 2, "name": "Science", "icon": "🔬", "modules": 10, "difficulty": "Beginner to Advanced"}, 
-    {"id": 3, "name": "English", "icon": "📚", "modules": 8, "difficulty": "Beginner to Advanced"},
-    {"id": 4, "name": "History", "icon": "🏛️", "modules": 6, "difficulty": "Intermediate"}
+    {"id": 1, "name": "Python", "icon": "🐍", "modules": 12, "difficulty": "Beginner to Advanced"},
+    {"id": 2, "name": "JavaScript", "icon": "⚡", "modules": 10, "difficulty": "Beginner to Advanced"}, 
+    {"id": 3, "name": "Java", "icon": "☕", "modules": 8, "difficulty": "Beginner to Advanced"},
+    {"id": 4, "name": "C++", "icon": "⚙️", "modules": 6, "difficulty": "Intermediate"},
+    {"id": 5, "name": "React", "icon": "⚛️", "modules": 8, "difficulty": "Intermediate to Advanced"},
+    {"id": 6, "name": "Node.js", "icon": "🟢", "modules": 7, "difficulty": "Intermediate"}
   ],
   diagnosticQuestions: [
     {
       "id": 1,
-      "subject": "Mathematics",
-      "question": "What is 15 × 8?",
-      "options": ["110", "120", "130", "140"],
-      "correct": 1,
+      "subject": "Python",
+      "question": "What is the correct way to declare a variable in Python?",
+      "options": ["var x = 5", "let x = 5", "x = 5", "int x = 5"],
+      "correct": 2,
       "difficulty": "basic"
     },
     {
       "id": 2,
-      "subject": "Mathematics", 
-      "question": "Solve for x: 2x + 5 = 17",
-      "options": ["6", "7", "8", "9"],
-      "correct": 0,
+      "subject": "JavaScript", 
+      "question": "Which keyword is used to declare a constant in JavaScript?",
+      "options": ["var", "let", "const", "final"],
+      "correct": 2,
       "difficulty": "intermediate"
     },
     {
       "id": 3,
-      "subject": "Science",
-      "question": "What is the chemical symbol for water?",
-      "options": ["H2O", "CO2", "O2", "NaCl"],
+      "subject": "Java",
+      "question": "What is the entry point of a Java application?",
+      "options": ["main() method", "start() method", "init() method", "run() method"],
       "correct": 0,
       "difficulty": "basic"
     },
     {
       "id": 4,
-      "subject": "English",
-      "question": "Which is the correct spelling?",
-      "options": ["Recieve", "Receive", "Receve", "Receiv"],
+      "subject": "React",
+      "question": "What is JSX in React?",
+      "options": ["A database", "A syntax extension for JavaScript", "A CSS framework", "A testing library"],
       "correct": 1,
       "difficulty": "basic"
     }
@@ -54,7 +56,7 @@ export const appData = {
       "level": "Intermediate",
       "totalPoints": 850,
       "badges": [1, 2, 5],
-      "progress": {"Mathematics": 75, "Science": 60, "English": 90},
+      "progress": {"Python": 75, "JavaScript": 60, "React": 45},
       "weeklyActivity": [2, 4, 3, 5, 4, 6, 3],
       "currentStreak": 5
     },
@@ -64,7 +66,7 @@ export const appData = {
       "level": "Advanced",
       "totalPoints": 1200,
       "badges": [1, 2, 3, 4],
-      "progress": {"Mathematics": 95, "Science": 85, "English": 88},
+      "progress": {"Python": 95, "JavaScript": 85, "Java": 78, "React": 90},
       "weeklyActivity": [5, 6, 4, 7, 5, 6, 4],
       "currentStreak": 12
     },
@@ -74,7 +76,7 @@ export const appData = {
       "level": "Beginner",
       "totalPoints": 320,
       "badges": [1],
-      "progress": {"Mathematics": 45, "Science": 30, "English": 55},
+      "progress": {"Python": 45, "JavaScript": 30},
       "weeklyActivity": [1, 2, 1, 3, 2, 2, 1],
       "currentStreak": 2
     }
@@ -82,59 +84,77 @@ export const appData = {
   learningModules: [
     {
       "id": 1,
-      "subject": "Mathematics",
-      "title": "Basic Arithmetic",
-      "description": "Learn addition, subtraction, multiplication and division",
+      "subject": "Python",
+      "title": "Python Fundamentals",
+      "description": "Learn variables, data types, and basic syntax",
       "difficulty": "Beginner",
       "estimatedTime": "45 minutes",
       "points": 50,
-      "topics": ["Addition", "Subtraction", "Multiplication", "Division"]
+      "topics": ["Variables", "Data Types", "Print Statements", "Basic Input"]
     },
     {
       "id": 2,
-      "subject": "Mathematics", 
-      "title": "Algebra Basics",
-      "description": "Introduction to variables and simple equations",
+      "subject": "Python", 
+      "title": "Control Structures",
+      "description": "Master if statements, loops, and conditional logic",
       "difficulty": "Intermediate", 
       "estimatedTime": "60 minutes",
       "points": 75,
-      "topics": ["Variables", "Simple Equations", "Problem Solving"]
+      "topics": ["If Statements", "For Loops", "While Loops", "Conditional Logic"]
     },
     {
       "id": 3,
-      "subject": "Science",
-      "title": "States of Matter",
-      "description": "Explore solids, liquids, gases and plasma",
+      "subject": "JavaScript",
+      "title": "JavaScript Basics",
+      "description": "Introduction to JavaScript syntax and DOM manipulation",
       "difficulty": "Beginner",
-      "estimatedTime": "40 minutes", 
-      "points": 50,
-      "topics": ["Solids", "Liquids", "Gases", "Phase Changes"]
+      "estimatedTime": "50 minutes", 
+      "points": 60,
+      "topics": ["Variables", "Functions", "DOM", "Events"]
+    },
+    {
+      "id": 4,
+      "subject": "React",
+      "title": "React Components",
+      "description": "Learn to build reusable UI components with React",
+      "difficulty": "Intermediate",
+      "estimatedTime": "70 minutes", 
+      "points": 80,
+      "topics": ["JSX", "Components", "Props", "State"]
     }
   ],
   resources: [
     {
       "id": 1,
-      "title": "Interactive Math Playground", 
+      "title": "Python Code Playground", 
       "type": "Interactive Tool",
-      "subject": "Mathematics",
+      "subject": "Python",
       "difficulty": "All Levels",
-      "description": "Practice math concepts through games and activities"
+      "description": "Practice Python concepts through interactive coding exercises"
     },
     {
       "id": 2,
-      "title": "Science Experiment Videos",
+      "title": "JavaScript Tutorial Videos",
       "type": "Video Series", 
-      "subject": "Science",
+      "subject": "JavaScript",
       "difficulty": "Beginner",
-      "description": "Watch exciting science experiments you can try at home"
+      "description": "Watch comprehensive JavaScript tutorials and examples"
     },
     {
       "id": 3,
-      "title": "Grammar Guide",
+      "title": "React Documentation",
       "type": "Reference Guide",
-      "subject": "English", 
+      "subject": "React", 
       "difficulty": "Intermediate",
-      "description": "Comprehensive guide to English grammar rules"
+      "description": "Official React documentation and best practices"
+    },
+    {
+      "id": 4,
+      "title": "Java Programming Exercises",
+      "type": "Practice Problems",
+      "subject": "Java", 
+      "difficulty": "Beginner to Advanced",
+      "description": "Hands-on Java coding challenges and solutions"
     }
   ]
 };

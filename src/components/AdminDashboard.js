@@ -1,148 +1,218 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAppContext } from '../App';
 import { LearningService } from '../services/supabaseClient';
 import LoadingSpinner from './LoadingSpinner';
-import { FaUsers, FaBook, FaChartBar, FaCog, FaUserShield, FaTrash, FaEdit } from 'react-icons/fa';
+import { FaUsers, FaBook, FaChartBar, FaCog, FaUserShield, FaTrash, FaEdit, FaEye } from 'react-icons/fa';
+
+// Constants
+const ADMIN_SECTIONS = {
+  OVERVIEW: 'overview',
+  USERS: 'users',
+  CONTENT: 'content',
+  SETTINGS: 'settings'
+};
+
+const USER_ROLES = {
+  ALL: 'all',
+  STUDENT: 'student',
+  TEACHER: 'teacher',
+  ADMIN: 'admin'
+};
+
+const FALLBACK_DATA = {
+  subjects: [
+    { id: '1', name: 'Mathematics', description: 'Learn math concepts', icon: '🔢' },
+    { id: '2', name: 'Science', description: 'Explore science', icon: '🔬' },
+    { id: '3', name: 'English', description: 'Language arts', icon: '📚' }
+  ],
+  lessons: [
+    { id: '1', title: 'Introduction to Algebra', description: 'Basic algebra concepts', difficulty: 'beginner', duration: 30 },
+    { id: '2', title: 'Basic Chemistry', description: 'Chemical reactions', difficulty: 'intermediate', duration: 45 }
+  ]
+};
 
 const AdminDashboard = () => {
   const { currentUser, handleLogout } = useAppContext();
-  const [activeSection, setActiveSection] = useState('overview');
+  
+  // State management
+  const [activeSection, setActiveSection] = useState(ADMIN_SECTIONS.OVERVIEW);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [users, setUsers] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [analytics, setAnalytics] = useState(null);
-  const [filterRole, setFilterRole] = useState('all');
+  const [filterRole, setFilterRole] = useState(USER_ROLES.ALL);
 
-  useEffect(() => {
-    // Temporarily disable admin role check for testing
-    // if (currentUser?.role !== 'admin') {
-    //   handleLogout();
-    //   return;
-    // }
-    loadAdminData();
-  }, [currentUser]);
+  // Data fetching utilities
+  const fetchWithFallback = useCallback(async (fetchFn, fallbackData = []) => {
+    try {
+      const data = await fetchFn();
+      console.log(`Fetched data:`, data);
+      return data || fallbackData;
+    } catch (error) {
+      console.error(`Data fetch failed:`, error);
+      return fallbackData;
+    }
+  }, []);
 
-  const loadAdminData = async () => {
+  const generateStatistics = useCallback((usersData, subjectsData, lessonsData) => {
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    
+    return {
+      totalUsers: usersData?.length || 0,
+      totalSubjects: subjectsData?.length || 0,
+      totalLessons: lessonsData?.length || 0,
+      activeUsers: usersData?.filter(u => 
+        u.last_login && u.last_login > weekAgo
+      ).length || 0
+    };
+  }, []);
+
+  const loadAdminData = useCallback(async () => {
     setLoading(true);
+    setError(null);
+    
     try {
       console.log('Loading admin data...');
       
-      // Fetch real users from Supabase
-      let usersData = [];
-      try {
-        usersData = await LearningService.getAllUsers();
-        console.log('Real users data from Supabase:', usersData);
-      } catch (error) {
-        console.error('Failed to fetch users from Supabase:', error);
-        usersData = []; // No fallback - show empty if database fails
-      }
-
-      let subjectsData = [];
-      try {
-        subjectsData = await LearningService.getSubjects();
-        console.log('Subjects data:', subjectsData);
-      } catch (error) {
-        console.error('Failed to fetch subjects:', error);
-        // Fallback subjects data
-        subjectsData = [
-          { id: '1', name: 'Mathematics', description: 'Learn math concepts', icon: '🔢' },
-          { id: '2', name: 'Science', description: 'Explore science', icon: '🔬' },
-          { id: '3', name: 'English', description: 'Language arts', icon: '📚' }
-        ];
-      }
-
-      let lessonsData = [];
-      try {
-        lessonsData = await LearningService.getAllLessons();
-        console.log('Lessons data:', lessonsData);
-      } catch (error) {
-        console.error('Failed to fetch lessons:', error);
-        // Fallback lessons data
-        lessonsData = [
-          { id: '1', title: 'Introduction to Algebra', description: 'Basic algebra concepts', difficulty: 'beginner' },
-          { id: '2', title: 'Basic Chemistry', description: 'Chemical reactions', difficulty: 'intermediate' }
-        ];
-      }
+      // Fetch all data concurrently with fallbacks
+      const [usersData, subjectsData, lessonsData] = await Promise.all([
+        fetchWithFallback(() => LearningService.getAllUsers(), []),
+        fetchWithFallback(() => LearningService.getSubjects(), FALLBACK_DATA.subjects),
+        fetchWithFallback(() => LearningService.getAllLessons(), FALLBACK_DATA.lessons)
+      ]);
       
-      setUsers(usersData || []);
-      setSubjects(subjectsData || []);
-      setLessons(lessonsData || []);
+      // Update state
+      setUsers(usersData);
+      setSubjects(subjectsData);
+      setLessons(lessonsData);
       
       // Generate analytics
-      const analyticsData = {
-        totalUsers: usersData?.length || 0,
-        totalSubjects: subjectsData?.length || 0,
-        totalLessons: lessonsData?.length || 0,
-        activeUsers: usersData?.filter(u => u.last_login && u.last_login > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()).length || 0
-      };
-      setAnalytics(analyticsData);
+      const stats = generateStatistics(usersData, subjectsData, lessonsData);
+      setAnalytics(stats);
       
-      console.log('Analytics data:', analyticsData);
+      console.log('Admin data loaded successfully', { 
+        users: usersData?.length, 
+        subjects: subjectsData?.length, 
+        lessons: lessonsData?.length 
+      });
+      
     } catch (error) {
       console.error('Failed to load admin data:', error);
+      setError('Failed to load admin data. Using demo data.');
+      
+      // Set fallback data on complete failure
+      setUsers([]);
+      setSubjects(FALLBACK_DATA.subjects);
+      setLessons(FALLBACK_DATA.lessons);
+      setAnalytics(generateStatistics([], FALLBACK_DATA.subjects, FALLBACK_DATA.lessons));
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchWithFallback, generateStatistics]);
 
-  const filteredUsers = Array.isArray(users) ? users.filter(user => 
-    filterRole === 'all' || user.role === filterRole
-  ) : [];
+  // Initialize admin data on mount
+  useEffect(() => {
+    loadAdminData();
+  }, [loadAdminData]);
 
-  const handleUserRoleChange = async (userId, newRole) => {
+  // Memoized filtered users for performance
+  const filteredUsers = useMemo(() => {
+    if (!Array.isArray(users)) return [];
+    
+    return filterRole === USER_ROLES.ALL 
+      ? users 
+      : users.filter(user => user.role === filterRole);
+  }, [users, filterRole]);
+
+  // User management handlers
+  const handleUserRoleChange = useCallback(async (userId, newRole) => {
+    if (!userId || !newRole) return;
+    
     try {
       await LearningService.updateUserRole(userId, newRole);
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, role: newRole } : user
-      ));
+      setUsers(prevUsers => 
+        prevUsers.map(user => 
+          user.id === userId ? { ...user, role: newRole } : user
+        )
+      );
     } catch (error) {
       console.error('Failed to update user role:', error);
+      setError('Failed to update user role. Please try again.');
     }
-  };
+  }, []);
 
-  const handleDeleteUser = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      try {
-        await LearningService.deleteUser(userId);
-        setUsers(users.filter(user => user.id !== userId));
-      } catch (error) {
-        console.error('Failed to delete user:', error);
-      }
+  const handleDeleteUser = useCallback(async (userId) => {
+    if (!userId) return;
+    
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this user? This action cannot be undone.'
+    );
+    
+    if (!confirmDelete) return;
+    
+    try {
+      await LearningService.deleteUser(userId);
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      setError('Failed to delete user. Please try again.');
     }
-  };
+  }, []);
 
-  const handleViewUser = (user) => {
-    // Create detailed user view modal
-    const userDetails = `
-      User Details:
-      Name: ${user.name || 'N/A'}
-      Email: ${user.email}
-      Phone: ${user.phone || 'N/A'}
-      Grade: ${user.grade || 'N/A'}
-      Class: ${user.class || 'N/A'}
-      School: ${user.school || 'N/A'}
-      Parent Name: ${user.parent_name || 'N/A'}
-      Parent Email: ${user.parent_email || 'N/A'}
-      Parent Phone: ${user.parent_phone || 'N/A'}
-      Address: ${user.address || 'N/A'}
-      City: ${user.city || 'N/A'}
-      State: ${user.state || 'N/A'}
-      Country: ${user.country || 'N/A'}
-      Status: ${user.status || 'active'}
-      Role: ${user.role || 'student'}
-      Subscription: ${user.subscription_type || 'free'}
-      Total Lessons: ${user.total_lessons_completed || 0}
-      Time Spent: ${user.total_time_spent || 0} minutes
-      Performance Score: ${user.performance_score || 0}%
-      Login Count: ${user.login_count || 0}
-      Last Login: ${user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'}
-      Created: ${new Date(user.created_at).toLocaleString()}
-    `;
-    alert(userDetails);
-  };
+  const formatUserDetails = useCallback((user) => {
+    const fields = [
+      ['Name', user.name],
+      ['Email', user.email],
+      ['Phone', user.phone],
+      ['Grade', user.grade],
+      ['Class', user.class],
+      ['School', user.school],
+      ['Parent Name', user.parent_name],
+      ['Parent Email', user.parent_email],
+      ['Parent Phone', user.parent_phone],
+      ['Address', user.address],
+      ['City', user.city],
+      ['State', user.state],
+      ['Country', user.country],
+      ['Status', user.status || 'active'],
+      ['Role', user.role || 'student'],
+      ['Subscription', user.subscription_type || 'free'],
+      ['Total Lessons', user.total_lessons_completed || 0],
+      ['Time Spent', `${user.total_time_spent || 0} minutes`],
+      ['Performance Score', `${user.performance_score || 0}%`],
+      ['Login Count', user.login_count || 0],
+      ['Last Login', user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'],
+      ['Created', user.created_at ? new Date(user.created_at).toLocaleString() : 'Unknown']
+    ];
+    
+    return fields
+      .map(([label, value]) => `${label}: ${value || 'N/A'}`)
+      .join('\n');
+  }, []);
 
+  const handleViewUser = useCallback((user) => {
+    if (!user) return;
+    
+    const userDetails = `User Details:\n\n${formatUserDetails(user)}`;
+    alert(userDetails); // TODO: Replace with proper modal component
+  }, [formatUserDetails]);
+
+  // Loading and error states
   if (loading) return <LoadingSpinner message="Loading admin dashboard..." />;
+  
+  if (error) {
+    return (
+      <div className="error-container">
+        <h2>Error</h2>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()} className="btn-primary">
+          Reload Page
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div id="admin-dashboard" className="page active">
@@ -152,26 +222,26 @@ const AdminDashboard = () => {
         </div>
         <div className="nav-menu">
           <button 
-            className={`nav-item ${activeSection === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveSection('overview')}
+            className={`nav-item ${activeSection === ADMIN_SECTIONS.OVERVIEW ? 'active' : ''}`}
+            onClick={() => setActiveSection(ADMIN_SECTIONS.OVERVIEW)}
           >
             <FaChartBar /> Overview
           </button>
           <button 
-            className={`nav-item ${activeSection === 'users' ? 'active' : ''}`}
-            onClick={() => setActiveSection('users')}
+            className={`nav-item ${activeSection === ADMIN_SECTIONS.USERS ? 'active' : ''}`}
+            onClick={() => setActiveSection(ADMIN_SECTIONS.USERS)}
           >
             <FaUsers /> Users
           </button>
           <button 
-            className={`nav-item ${activeSection === 'content' ? 'active' : ''}`}
-            onClick={() => setActiveSection('content')}
+            className={`nav-item ${activeSection === ADMIN_SECTIONS.CONTENT ? 'active' : ''}`}
+            onClick={() => setActiveSection(ADMIN_SECTIONS.CONTENT)}
           >
             <FaBook /> Content
           </button>
           <button 
-            className={`nav-item ${activeSection === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveSection('settings')}
+            className={`nav-item ${activeSection === ADMIN_SECTIONS.SETTINGS ? 'active' : ''}`}
+            onClick={() => setActiveSection(ADMIN_SECTIONS.SETTINGS)}
           >
             <FaCog /> Settings
           </button>
@@ -184,7 +254,7 @@ const AdminDashboard = () => {
 
       <div className="dashboard-content">
         {/* Overview Section */}
-        {activeSection === 'overview' && (
+        {activeSection === ADMIN_SECTIONS.OVERVIEW && (
           <div className="section active">
             <h2>System Overview</h2>
             <div className="stats-grid">
@@ -239,16 +309,16 @@ const AdminDashboard = () => {
         )}
 
         {/* Users Management Section */}
-        {activeSection === 'users' && (
+        {activeSection === ADMIN_SECTIONS.USERS && (
           <div className="section active">
             <div className="section-header">
               <h2>User Management</h2>
               <div className="filters">
                 <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)}>
-                  <option value="all">All Roles</option>
-                  <option value="student">Students</option>
-                  <option value="teacher">Teachers</option>
-                  <option value="admin">Admins</option>
+                  <option value={USER_ROLES.ALL}>All Roles</option>
+                  <option value={USER_ROLES.STUDENT}>Students</option>
+                  <option value={USER_ROLES.TEACHER}>Teachers</option>
+                  <option value={USER_ROLES.ADMIN}>Admins</option>
                 </select>
               </div>
             </div>
@@ -351,7 +421,7 @@ const AdminDashboard = () => {
                               onClick={() => handleViewUser(user)}
                               title="View Details"
                             >
-                              👁️
+                              <FaEye />
                             </button>
                             <button className="action-btn edit-btn" title="Edit User">
                               <FaEdit />
@@ -375,7 +445,7 @@ const AdminDashboard = () => {
         )}
 
         {/* Content Management Section */}
-        {activeSection === 'content' && (
+        {activeSection === ADMIN_SECTIONS.CONTENT && (
           <div className="section active">
             <h2>Content Management</h2>
             
@@ -408,7 +478,7 @@ const AdminDashboard = () => {
                         <h4>{lesson.title}</h4>
                         <p>{lesson.description}</p>
                         <span className="lesson-meta">
-                          Difficulty: {lesson.difficulty} | Duration: {lesson.duration}min
+                          Difficulty: {lesson.difficulty} | Duration: {lesson.duration || 30}min
                         </span>
                       </div>
                       <div className="lesson-actions">
@@ -428,7 +498,7 @@ const AdminDashboard = () => {
         )}
 
         {/* Settings Section */}
-        {activeSection === 'settings' && (
+        {activeSection === ADMIN_SECTIONS.SETTINGS && (
           <div className="section active">
             <h2>System Settings</h2>
             <div className="settings-grid">

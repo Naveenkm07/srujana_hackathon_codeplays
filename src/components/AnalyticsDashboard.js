@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AnalyticsService } from '../utils/analytics';
 import { useAppContext } from '../App';
 
@@ -7,13 +7,7 @@ const AnalyticsDashboard = () => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (currentUser) {
-      loadAnalytics();
-    }
-  }, [currentUser]);
-
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     setLoading(true);
     try {
       const userAnalytics = AnalyticsService.getLearningAnalytics(currentUser.id || 'demo');
@@ -28,7 +22,13 @@ const AnalyticsDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (currentUser) {
+      loadAnalytics();
+    }
+  }, [currentUser, loadAnalytics]);
 
   if (loading) {
     return (

@@ -166,9 +166,9 @@ function initializeApp() {
             currentUser = JSON.parse(savedUser);
             if (currentUser.role === 'student') {
                 showStudentDashboard();
-            } else {
-                showTeacherDashboard();
-            }
+            } // else {
+                // showTeacherDashboard(); // Teacher feature temporarily disabled
+            // }
         } catch (e) {
             localStorage.removeItem('smartTutorUser');
             showLandingPage();
@@ -296,6 +296,7 @@ function showStudentDashboard() {
     }, 100);
 }
 
+/* Teacher feature temporarily disabled
 function showTeacherDashboard() {
     showPage('teacher-dashboard');
     const teacherNameEl = document.getElementById('teacher-name');
@@ -306,6 +307,7 @@ function showTeacherDashboard() {
         loadTeacherData();
     }, 100);
 }
+*/
 
 // Role Selection - Fixed function
 function handleRoleSelection(role) {
@@ -410,9 +412,9 @@ function handleProfileSetup(event) {
     
     if (currentUser.role === 'student') {
         startDiagnosticAssessment();
-    } else {
-        showTeacherDashboard();
-    }
+    } // else {
+        // showTeacherDashboard(); // Teacher feature temporarily disabled
+    // }
 }
 
 // Diagnostic Assessment

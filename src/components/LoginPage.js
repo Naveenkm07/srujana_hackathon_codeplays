@@ -1,6 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LearningService } from '../services/supabaseClient';
+import { LearningService, UserBehaviorTracker } from '../services/supabaseClient';
+
+// Constants
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const DEFAULT_ROLE = 'student';
+const AUTH_ERRORS = {
+  GOOGLE_NOT_AVAILABLE: 'Google login is not available. Please try again later.',
+  GOOGLE_FAILED: 'Failed to start Google login. Please try again.',
+  INVALID_CREDENTIALS: 'Please enter both email and password.',
+  LOGIN_FAILED: 'Login failed. Please check your credentials.'
+};
 
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -9,85 +19,122 @@ const LoginPage = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simulate login logic
-    if (email && password) {
-      onLogin({ email, role: 'student' });
-      navigate('/student');
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      if (!email || !password) {
+        setError(AUTH_ERRORS.INVALID_CREDENTIALS);
+        return;
+      }
+
+      UserBehaviorTracker.trackFormSubmission('email_login', { email });
+      
+      // Attempt authentication with Supabase
+      const { data, error: authError } = await LearningService.signIn(email, password);
+      
+      if (authError) {
+        console.error('Authentication failed:', authError);
+        setError(authError.message || AUTH_ERRORS.LOGIN_FAILED);
+        return;
+      }
+      
+      if (data?.user) {
+        const userData = {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.user_metadata?.name || email.split('@')[0],
+          role: data.user.user_metadata?.role || DEFAULT_ROLE,
+          avatar: data.user.user_metadata?.avatar_url
+        };
+        
+        onLogin(userData);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(AUTH_ERRORS.LOGIN_FAILED);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleResponse = useCallback(async (response) => {
+    setIsLoading(true);
+    setError('');
+    
     try {
+      UserBehaviorTracker.trackFormSubmission('google_login');
+      
       // Decode the JWT token to get user info
       const userObject = JSON.parse(atob(response.credential.split('.')[1]));
-      let user = userObject;
-      // Check if user exists in our database
+      
       let userData = {
-        id: user.id || 'demo-user',
-        email: user.email || email,
-        name: user.user_metadata?.name || user.email.split('@')[0],
-        role: 'student', // Default role
-        avatar: user.user_metadata?.avatar_url
+        id: userObject.sub,
+        email: userObject.email,
+        name: userObject.name || userObject.email.split('@')[0],
+        role: DEFAULT_ROLE,
+        avatar: userObject.picture
       };
 
-      // Try to get actual user data from database or create new user
-      try {
-        const existingUser = await LearningService.getUserByEmail(user.email);
-        if (existingUser) {
-          userData = {
-            ...userData,
-            role: existingUser.role || 'student',
-            grade: existingUser.grade,
-            class: existingUser.class,
-            phone: existingUser.phone,
-            school: existingUser.school
-          };
-          
-          // Update last login
-          await LearningService.updateUserLastLogin(existingUser.id);
-        } else {
-          // Create new user in database
-          const newUser = await LearningService.createUser({
-            email: user.email,
-            name: user.name || user.email.split('@')[0],
-            role: 'student',
-            avatar_url: user.picture,
-            google_id: user.sub,
-            last_login: new Date().toISOString(),
-            login_count: 1
-          });
-          
-          if (newUser) {
-            userData = { ...userData, ...newUser };
-          }
+      // Try to get existing user or create new one
+      const existingUser = await LearningService.getUserByEmail(userObject.email);
+      
+      if (existingUser) {
+        userData = {
+          ...userData,
+          ...existingUser,
+          id: existingUser.id
+        };
+        
+        // Update last login
+        await LearningService.updateUserLastLogin(existingUser.id);
+      } else {
+        // Create new user in database
+        const newUser = await LearningService.createUser({
+          email: userObject.email,
+          name: userObject.name || userObject.email.split('@')[0],
+          role: DEFAULT_ROLE,
+          avatar_url: userObject.picture,
+          google_id: userObject.sub,
+          last_login: new Date().toISOString(),
+          login_count: 1
+        });
+        
+        if (newUser) {
+          userData = { ...userData, ...newUser };
         }
-      } catch (error) {
-        console.error('Database user operation failed:', error);
-        // Fallback - still allow login but with basic data
-        userData.role = 'student';
       }
       
       onLogin(userData);
     } catch (error) {
       console.error('Google login error:', error);
+      setError('Google login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-  }, [onLogin, navigate]);
+  }, [onLogin]);
 
   useEffect(() => {
-    // Initialize Google Identity Services with renderButton approach
     const initializeGoogle = () => {
-      if (window.google && window.google.accounts) {
+      if (!GOOGLE_CLIENT_ID) {
+        console.warn('Google Client ID not configured');
+        return;
+      }
+      
+      if (window.google?.accounts) {
         try {
           window.google.accounts.id.initialize({
-            client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+            client_id: GOOGLE_CLIENT_ID,
             callback: handleGoogleResponse,
             auto_select: false,
             cancel_on_tap_outside: true
           });
 
-          // Render the Google button directly
           const googleButtonDiv = document.getElementById('google-signin-button');
           if (googleButtonDiv) {
             window.google.accounts.id.renderButton(googleButtonDiv, {
@@ -104,39 +151,21 @@ const LoginPage = ({ onLogin }) => {
           console.error('Failed to initialize Google Identity Services:', error);
         }
       } else {
-        // Retry after a short delay if Google script hasn't loaded yet
         setTimeout(initializeGoogle, 100);
       }
     };
 
-    // Small delay to ensure DOM is ready
     const timer = setTimeout(initializeGoogle, 500);
     return () => clearTimeout(timer);
   }, [handleGoogleResponse]);
 
-  const handleGoogleLogin = () => {
-    try {
-      console.log('Google login button clicked - fallback method');
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        window.google.accounts.id.prompt((notification) => {
-          console.log('Google prompt notification:', notification);
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            console.log('Google One Tap not displayed or skipped');
-          }
-        });
-      } else {
-        console.error('Google Identity Services not available');
-        alert('Google login is not available. Please try again later.');
-      }
-    } catch (error) {
-      console.error('Error triggering Google login:', error);
-      alert('Failed to start Google login. Please try again.');
-    }
-  };
 
   const handleRegister = () => {
+    UserBehaviorTracker.trackButtonClick('register_link');
     navigate('/signup');
   };
+
+  const clearError = () => setError('');
 
   return (
     <div className="login-container">
@@ -260,6 +289,17 @@ const LoginPage = ({ onLogin }) => {
           </div>
           
           <form onSubmit={handleLogin} className="login-form">
+            {/* Error Display */}
+            {error && (
+              <div className="error-message">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="error-icon">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                {error}
+                <button type="button" onClick={clearError} className="error-close">×</button>
+              </div>
+            )}
+            
             {/* Google Sign-In Button Container */}
             <div id="google-signin-button" className="google-signin-container"></div>
             
@@ -324,11 +364,24 @@ const LoginPage = ({ onLogin }) => {
                 <span className="checkmark"></span>
                 Remember me
               </label>
-              <a href="#" className="forgot-password">Forgot Password?</a>
+              <button type="button" className="forgot-password" onClick={() => setError('Password reset feature coming soon!')}>Forgot Password?</button>
             </div>
             
-            <button type="submit" className="login-btn">
-              Login
+            <button type="submit" className="login-btn" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <svg className="loading-spinner" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="4" opacity="0.3"/>
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="4" strokeDasharray="31.416" strokeDashoffset="31.416">
+                      <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                      <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                    </circle>
+                  </svg>
+                  Logging in...
+                </>
+              ) : (
+                'Login'
+              )}
             </button>
             
             <p className="register-link">
