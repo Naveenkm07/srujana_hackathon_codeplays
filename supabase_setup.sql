@@ -101,3 +101,4 @@ CREATE POLICY "Users can view own progress" ON user_progress FOR ALL USING (auth
 CREATE POLICY "Anyone can view subjects" ON subjects FOR SELECT USING (true);
 CREATE POLICY "Anyone can view lessons" ON lessons FOR SELECT USING (true);
 CREATE POLICY "Anyone can view quizzes" ON quizzes FOR SELECT USING (true);
+

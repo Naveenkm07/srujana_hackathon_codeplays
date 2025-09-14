@@ -41,7 +41,6 @@ const LandingPage = () => {
   ];
 
   const stats = [
-    { number: '10K+', label: 'Active Students' },
     { number: '95%', label: 'Success Rate' },
     { number: '500+', label: 'Learning Modules' },
     { number: '24/7', label: 'Support' }

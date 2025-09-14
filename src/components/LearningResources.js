@@ -121,6 +121,47 @@ const LearningResources = ({ currentUser }) => {
     return iconMap[category] || <FaCode />;
   };
 
+  const handleStartTest = (test) => {
+    console.log('Starting test:', test.name);
+    // Update analytics
+    updateTestAttempts(test.id);
+    
+    // Navigate to test interface or open modal
+    alert(`Starting ${test.name}\n\n${test.questions} questions, ${test.timeLimit} minutes\nDifficulty: ${test.difficulty}\n\nGood luck!`);
+    
+    // In a real implementation, you would:
+    // - Navigate to a test page
+    // - Open a test modal
+    // - Start the timer
+    // - Load questions from a database
+  };
+
+  const updateTestAttempts = (testId) => {
+    setPracticeTests(prev => prev.map(test => 
+      test.id === testId 
+        ? { ...test, attempts: test.attempts + 1 }
+        : test
+    ));
+  };
+
+  const handleViewResource = (resource) => {
+    console.log('Viewing resource:', resource.title);
+    if (resource.url) {
+      window.open(resource.url, '_blank');
+    } else {
+      alert(`Opening ${resource.title}\n\nType: ${resource.type}\nSubject: ${resource.subject}\n\n${resource.description}`);
+    }
+  };
+
+  const handleWatchVideo = (video) => {
+    console.log('Watching video:', video.title);
+    if (video.url) {
+      window.open(video.url, '_blank');
+    } else {
+      alert(`Playing ${video.title}\n\nDuration: ${video.duration}\nLevel: ${video.level}\n\n${video.description}\n\nNote: This would open the video player in a real implementation.`);
+    }
+  };
+
   const loadUserAnalytics = () => {
     // Simulate loading user analytics
     const savedAnalytics = localStorage.getItem(`learningAnalytics_${currentUser?.id}`);
@@ -318,12 +359,18 @@ const LearningResources = ({ currentUser }) => {
                 <span><FaCalendar /> {material.lastUpdated}</span>
               </div>
               <div className="card-actions">
-                <a href={material.url} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                <button 
+                  className="btn-primary"
+                  onClick={() => handleViewResource(material)}
+                >
                   <FaExternalLinkAlt /> View
-                </a>
-                <a href={material.downloadUrl} className="btn-secondary">
+                </button>
+                <button 
+                  className="btn-secondary"
+                  onClick={() => handleViewResource(material)}
+                >
                   <FaDownload /> Download
-                </a>
+                </button>
               </div>
             </div>
           ))}
@@ -353,9 +400,12 @@ const LearningResources = ({ currentUser }) => {
                 <div className="difficulty-badge" data-difficulty={video.difficulty.toLowerCase()}>
                   {video.difficulty}
                 </div>
-                <a href={video.url} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                <button 
+                  className="btn-primary"
+                  onClick={() => handleWatchVideo(video)}
+                >
                   <FaPlay /> Watch Now
-                </a>
+                </button>
               </div>
             </div>
           ))}
@@ -381,7 +431,10 @@ const LearningResources = ({ currentUser }) => {
               <div className="difficulty-badge" data-difficulty={test.difficulty.toLowerCase()}>
                 {test.difficulty}
               </div>
-              <button className="btn-primary test-btn">
+              <button 
+                className="btn-primary test-btn"
+                onClick={() => handleStartTest(test)}
+              >
                 Start Test
               </button>
             </div>

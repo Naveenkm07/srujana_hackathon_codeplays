@@ -9,6 +9,7 @@ import ParticleSystem from './ParticleSystem';
 import soundEffects from './SoundEffects';
 import CodePetSystem from './CodePetSystem';
 import AICodeBattle from './AICodeBattle';
+import AIGamingChallenge from './AIGamingChallenge';
 import CodeMusicGenerator from './CodeMusicGenerator';
 import CodeCityBuilder from './CodeCityBuilder';
 import Advanced3DCodingWorld from './Advanced3DCodingWorld';
@@ -235,6 +236,26 @@ const EnhancedGamesSection = ({ currentUser }) => {
       type: 'code-pets',
       unlocked: true,
       isSpecial: true
+    },
+    {
+      id: 'ai-code-battle',
+      title: 'AI Code Battle Arena',
+      description: 'Battle against AI in epic coding challenges',
+      difficulty: 'Expert',
+      icon: <FaBrain />,
+      category: 'competitive',
+      unlocked: true,
+      component: AICodeBattle
+    },
+    {
+      id: 'ai-gaming-challenge',
+      title: 'AI Gaming Challenge',
+      description: 'Test your problem-solving skills with AI-generated challenges and timer controls',
+      difficulty: 'Advanced',
+      icon: <FaClock />,
+      category: 'competitive',
+      unlocked: true,
+      component: AIGamingChallenge
     },
     {
       id: 'ai-battle',

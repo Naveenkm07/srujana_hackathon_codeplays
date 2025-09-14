@@ -73,6 +73,32 @@ function StudentDashboard() {
   const [loading, setLoading] = useState(true);
   const [recommendations, setRecommendations] = useLocalStorage('user_recommendations', []);
 
+  // Handle progress updates from learning components
+  const handleProgress = useCallback(async (progressData) => {
+    try {
+      // Update local state
+      setUserProgress(prev => ({
+        ...prev,
+        ...progressData
+      }));
+
+      // Update in Supabase if user is authenticated
+      if (currentUser.id) {
+        await LearningService.updateUserProgress(currentUser.id, progressData);
+      }
+
+      // Note: User progress is managed through context and Supabase
+
+      // Generate new recommendations based on updated progress
+      generateRecommendations({
+        ...userProgress,
+        ...progressData
+      });
+    } catch (error) {
+      console.error('Error updating progress:', error);
+    }
+  }, [currentUser, userProgress]);
+
   const generateRecommendations = useCallback((progressData) => {
     const newRecommendations = [];
     
@@ -247,7 +273,7 @@ function StudentDashboard() {
             onClick={() => setActiveSection(DASHBOARD_SECTIONS.CMODULES)}
           >
             <FaCode className="nav-icon" />
-            C-Modules
+            Learning Hub
           </button>
           <button 
             className={`nav-item ${activeSection === DASHBOARD_SECTIONS.AI_CHARTS ? 'active' : ''}`}
@@ -1801,8 +1827,9 @@ int main() {
     setHintsUsed(0);
     setOutput('');
     setTestResults([]);
-    if (currentChallenge && currentChallenge.templates[selectedLanguage]) {
-      setUserCode(currentChallenge.templates[selectedLanguage]);
+    if (currentChallenge) {
+      const template = getLanguageTemplate(selectedLanguage, currentChallenge.id);
+      setUserCode(template);
     }
   };
 
@@ -1812,8 +1839,9 @@ int main() {
     setHintsUsed(0);
     setOutput('');
     setTestResults([]);
-    if (currentChallenge && currentChallenge.templates[selectedLanguage]) {
-      setUserCode(currentChallenge.templates[selectedLanguage]);
+    if (currentChallenge) {
+      const template = getLanguageTemplate(selectedLanguage, currentChallenge.id);
+      setUserCode(template);
     }
   };
 

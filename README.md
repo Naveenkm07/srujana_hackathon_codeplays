@@ -1,12 +1,13 @@
 # 🎓 Smart Tutor Dashboard
 
-### Full-Stack Adaptive Learning Platform with Real-Time Analytics & Admin Management
+### AI-Powered Coding Education Platform with Interactive Learning & Gamification
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/Naveenkm07/srujana_hackathon_codeplays)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/Naveenkm07/srujana_hackathon_codeplays)
 [![React](https://img.shields.io/badge/react-18.2.0-blue.svg)](https://reactjs.org/)
 [![Supabase](https://img.shields.io/badge/supabase-backend-green.svg)](https://supabase.com/)
+[![AI](https://img.shields.io/badge/AI-powered-orange.svg)](https://openai.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/Naveenkm07/srujana_hackathon_codeplays)
 
@@ -16,17 +17,17 @@
 
 ## 🚀 **Project Overview**
 
-Smart Tutor Dashboard is a **comprehensive educational platform** built with **React** and **Supabase** that provides personalized learning experiences through advanced analytics, role-based access control, and real-time data management. 
+Smart Tutor Dashboard is a **next-generation coding education platform** that revolutionizes programming learning through AI-powered features, interactive challenges, and gamified experiences. Built with modern web technologies, it provides personalized learning paths for programming languages including Python, JavaScript, Java, C++, React, and Node.js.
 
-**🎯 Key Differentiators:**
-- **Full-Stack Architecture**: React frontend + Supabase backend + Google OAuth
-- **Real-Time Admin Panel**: Live user management, analytics, and content control
-- **Role-Based Access**: Student, Teacher, and Admin dashboards with specific functionalities
-- **Google Authentication**: Secure OAuth integration with automatic user creation
-- **Live Analytics**: Real-time progress tracking and performance insights
-- **Scalable Database**: Supabase PostgreSQL with advanced user schema
+**🎯 Key Innovations:**
+- **🤖 AI-Powered Learning**: Natural language chart generation and intelligent coding challenges
+- **🎮 Gamified Experience**: Interactive games, achievements, XP system, and coding battles  
+- **📊 Smart Analytics**: Real-time progress tracking with Chart.js visualizations
+- **🎯 Adaptive Assessment**: Intelligent skill level determination (Beginner/Intermediate/Advanced)
+- **💻 Interactive Coding**: Monaco Editor integration for hands-on programming
+- **🏆 Achievement System**: Badges, streaks, and performance-based rewards
 
-> *"Empowering educators with data-driven insights and students with personalized learning paths"*
+> *"Transforming coding education through AI, gamification, and personalized learning experiences"*
 
 ---
 
