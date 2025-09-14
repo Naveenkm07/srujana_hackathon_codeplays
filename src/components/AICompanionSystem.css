@@ -151,7 +151,7 @@
   background: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
   padding: 30px;
-  backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); */ /* Removed for clarity */
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -319,7 +319,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   position: relative;
   overflow: hidden;
 }
@@ -384,7 +384,7 @@
 .companion-chat {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
-  backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); */ /* Removed for clarity */
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;

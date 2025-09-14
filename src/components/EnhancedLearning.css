@@ -15,7 +15,7 @@
   align-items: center;
   margin-bottom: 3rem;
   background: var(--color-surface);
-  backdrop-filter: blur(15px);
+  /* backdrop-filter: blur(15px); */ /* Removed for clarity */
   border-radius: 25px;
   padding: 2rem;
   border: 1px solid var(--color-card-border);
@@ -147,7 +147,7 @@
 
 .track-card {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   border-radius: 25px;
   padding: 2rem;
   border: 2px solid transparent;
@@ -293,7 +293,7 @@
 
 .module-card {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   border-radius: 20px;
   padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -440,7 +440,7 @@
 
 .certification-card {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   border-radius: 20px;
   padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -494,7 +494,7 @@
 
 .pathway-card {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   border-radius: 20px;
   padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -550,7 +550,7 @@
 
 .recommendation-card {
   background: rgba(155, 89, 182, 0.1);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   border-radius: 20px;
   padding: 2rem;
   border: 1px solid rgba(155, 89, 182, 0.3);
@@ -615,7 +615,7 @@
 
 .analytics-card {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   border-radius: 20px;
   padding: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);

@@ -13,7 +13,7 @@
   align-items: center;
   padding: 20px 30px;
   background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); */ /* Removed for clarity */
   border-bottom: 2px solid rgba(0, 255, 255, 0.3);
 }
 
@@ -72,7 +72,7 @@
 .world-sidebar {
   width: 300px;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); */ /* Removed for clarity */
   border-right: 2px solid rgba(0, 255, 255, 0.2);
   padding: 20px;
   overflow-y: auto;
@@ -245,7 +245,7 @@
   right: 20px;
   width: 300px;
   background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); */ /* Removed for clarity */
   border-radius: 15px;
   padding: 20px;
   border: 2px solid rgba(255, 215, 0, 0.5);
@@ -317,7 +317,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
 }
 
 .spell-btn:hover, .interact-btn:hover {

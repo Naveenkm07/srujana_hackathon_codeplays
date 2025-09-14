@@ -80,7 +80,7 @@
   background: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 16px;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   transition: all 0.3s ease;
 }
 
@@ -101,7 +101,7 @@
   background: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 16px;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */ /* Removed for clarity */
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 180px;
@@ -124,7 +124,7 @@
   border-radius: 20px;
   padding: 30px;
   margin-bottom: 40px;
-  backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); */ /* Removed for clarity */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -206,7 +206,7 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 25px;
-  backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(20px); */ /* Removed for clarity */
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
   position: relative;
