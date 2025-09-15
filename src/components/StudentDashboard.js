@@ -44,6 +44,7 @@ import EnhancedGamesSection from './EnhancedGamesSection';
 import LearningResources from './LearningResources';
 import EnhancedAchievements from './EnhancedAchievements';
 import EnhancedLearning from './EnhancedLearning';
+import CodeEditor from './CodeEditor';
 
 // Constants
 const DASHBOARD_SECTIONS = {
@@ -54,6 +55,7 @@ const DASHBOARD_SECTIONS = {
   CHALLENGES: 'challenges',
   CMODULES: 'cmodules',
   AI_CHARTS: 'ai-charts',
+  CODE_EDITOR: 'code-editor',
   GAMES: 'games',
   PROFILE: 'profile'
 };
@@ -283,6 +285,13 @@ function StudentDashboard() {
             AI Charts
           </button>
           <button 
+            className={`nav-item ${activeSection === DASHBOARD_SECTIONS.CODE_EDITOR ? 'active' : ''}`}
+            onClick={() => setActiveSection(DASHBOARD_SECTIONS.CODE_EDITOR)}
+          >
+            <FaCode className="nav-icon" />
+            Code Editor
+          </button>
+          <button 
             className={`nav-item ${activeSection === DASHBOARD_SECTIONS.GAMES ? 'active' : ''}`}
             onClick={() => setActiveSection(DASHBOARD_SECTIONS.GAMES)}
           >
@@ -345,6 +354,13 @@ function StudentDashboard() {
         {/* AI Charts Section */}
         {activeSection === DASHBOARD_SECTIONS.AI_CHARTS && (
           <AiChartTab />
+        )}
+
+        {/* Code Editor Section */}
+        {activeSection === DASHBOARD_SECTIONS.CODE_EDITOR && (
+          <div className="section active">
+            <CodeEditor />
+          </div>
         )}
 
         {/* Games Section */}

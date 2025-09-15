@@ -1,11 +1,13 @@
 # 🎓 Smart Tutor Dashboard
 
-### AI-Powered Coding Education Platform with Interactive Learning & Gamification
+### AI-Powered Coding Education Platform with Interactive Learning, Monaco Code Editor & Advanced Gamification
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/Naveenkm07/srujana_hackathon_codeplays)
+[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/Naveenkm07/srujana_hackathon_codeplays)
 [![React](https://img.shields.io/badge/react-18.2.0-blue.svg)](https://reactjs.org/)
+[![Monaco Editor](https://img.shields.io/badge/monaco--editor-0.53.0-red.svg)](https://microsoft.github.io/monaco-editor/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--3.5-green.svg)](https://openai.com/)
 [![Supabase](https://img.shields.io/badge/supabase-backend-green.svg)](https://supabase.com/)
 [![AI](https://img.shields.io/badge/AI-powered-orange.svg)](https://openai.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -17,26 +19,33 @@
 
 ## 🚀 **Project Overview**
 
-Smart Tutor Dashboard is a **next-generation coding education platform** that revolutionizes programming learning through AI-powered features, interactive challenges, and gamified experiences. Built with modern web technologies, it provides personalized learning paths for programming languages including Python, JavaScript, Java, C++, React, and Node.js.
+Smart Tutor Dashboard is a **cutting-edge coding education platform** that revolutionizes programming learning through **OpenAI-powered AI features**, **Monaco Editor integration**, and **advanced gamification**. Built with modern web technologies, it provides personalized learning paths for programming languages including Python, JavaScript, Java, C++, React, and Node.js.
 
-**🎯 Key Innovations:**
-- **🤖 AI-Powered Learning**: Natural language chart generation and intelligent coding challenges
-- **🎮 Gamified Experience**: Interactive games, achievements, XP system, and coding battles  
-- **📊 Smart Analytics**: Real-time progress tracking with Chart.js visualizations
-- **🎯 Adaptive Assessment**: Intelligent skill level determination (Beginner/Intermediate/Advanced)
-- **💻 Interactive Coding**: Monaco Editor integration for hands-on programming
-- **🏆 Achievement System**: Badges, streaks, and performance-based rewards
+**🎯 Latest Key Innovations:**
+- **🤖 OpenAI GPT Integration**: Dynamic question generation and AI tutoring with real API keys
+- **💻 Monaco Code Editor**: Full VS Code experience with multi-language support
+- **🎮 Advanced Gamification**: RPG-style progression, achievements, and coding battles  
+- **📊 Real-time Analytics**: Live progress tracking with Chart.js visualizations
+- **🎯 Adaptive AI Assessment**: Intelligent skill level determination with performance analysis
+- **🔄 Voice-to-Website Builder**: AI-powered website generation from voice commands
+- **🏆 Enhanced Achievement System**: Comprehensive badges, streaks, and performance rewards
 
-> *"Transforming coding education through AI, gamification, and personalized learning experiences"*
+> *"Transforming coding education through AI, professional code editing, and personalized learning experiences"*
 
 ---
 
 ## 🚀 Key Features & Capabilities
 
-### ⚡ **Platform Features**
+### ⚡ **Latest Platform Features (v4.0)**
 
 | Feature Category | Implementation | Technology Stack |
 |---------|----------------|-------------------|
+| 💻 **Monaco Code Editor** | Full VS Code experience with multi-language support | `@monaco-editor/react`, `monaco-editor` |
+| 🤖 **OpenAI Integration** | GPT-3.5 powered question generation and AI tutoring | `@google/generative-ai`, OpenAI API |
+| 🎙️ **Voice-to-Website** | AI-powered website generation from voice commands | Google Speech API, Generative AI |
+| 📊 **AI Chart Generation** | Natural language to interactive charts | Custom AI service, Chart.js |
+| 🔍 **Question Generation Service** | Dynamic programming questions with adaptive difficulty | LLM integration, Performance analysis |
+| 🎮 **Advanced Gamification** | RPG-style progression, coding battles, achievements | React components, Supabase tracking |
 | 🔐 **Authentication** | Google OAuth 2.0 with automatic user creation | `@google-cloud/local-auth`, Supabase Auth |
 | 👥 **User Management** | Role-based access (Student/Teacher/Admin) | React Context, Supabase RLS |
 | 📊 **Real-Time Analytics** | Live dashboards with interactive charts | `Chart.js`, `react-chartjs-2` |
@@ -47,15 +56,18 @@ Smart Tutor Dashboard is a **next-generation coding education platform** that re
 | 🔄 **Real-Time Data** | Live user activity and progress sync | Supabase real-time subscriptions |
 | 🎨 **Modern UI/UX** | Clean, accessible interface design | React Icons, Custom CSS, Dark mode support |
 
-### 👨‍🎓 **Student Dashboard Features**
+### 👨‍🎓 **Enhanced Student Dashboard Features**
 
+- **💻 Code Editor**: Professional Monaco Editor with multi-language support (JavaScript, Python, Java, C++, HTML, CSS, JSON)
+- **🤖 AI Question Generation**: Dynamic programming questions powered by OpenAI GPT-3.5
 - **📊 Progress Overview**: Visual progress tracking with chart.js analytics
 - **📚 Learning Modules**: Subject-based lesson navigation with completion tracking
-- **🎯 Interactive Assessments**: Modal-based quizzes with instant feedback
-- **🏆 Achievement System**: Badge collection and performance metrics
-- **📈 Personal Analytics**: Individual learning insights and recommendations
-- **📱 Responsive Interface**: Optimized for desktop and mobile learning
+- **🎯 Interactive Assessments**: Modal-based quizzes with instant AI-powered feedback
+- **🏆 Achievement System**: Enhanced badge collection and performance metrics with RPG elements
+- **📈 Personal Analytics**: Individual learning insights and AI-powered recommendations
+- **📱 Responsive Interface**: Optimized for desktop and mobile learning with dark mode support
 - **🔄 Real-Time Sync**: Progress automatically saved to Supabase database
+- **🎮 Gamification Hub**: Interactive games, coding challenges, and competitive programming
 
 ### 👩‍🏫 **Teacher Dashboard Features**
 
@@ -89,10 +101,24 @@ Smart Tutor Dashboard is a **next-generation coding education platform** that re
 ├── React-ChartJS-2 5.2.0       // React wrapper for Chart.js
 └── CSS3 + Modern Features       // Styling with Grid, Flexbox, Variables
 
+// Code Editor & AI Integration
+├── Monaco Editor 0.53.0         // VS Code editor engine
+├── @monaco-editor/react 4.7.0  // React wrapper for Monaco
+├── @google/generative-ai 0.21.0 // Google AI integration
+├── @google-cloud/speech 6.7.0  // Voice recognition API
+└── OpenAI GPT-3.5              // Question generation & tutoring
+
 // Authentication & APIs
 ├── Google Auth Library 10.3.0   // OAuth integration
 ├── Supabase JS 2.57.4          // Backend client
+├── Axios 1.12.1                // HTTP client
 └── Web Vitals 2.1.4            // Performance monitoring
+
+// Additional Libraries
+├── html2canvas 1.4.1           // Chart export functionality
+├── jsPDF 3.0.2                 // PDF generation
+├── Recharts 3.2.0              // Additional charting library
+└── Multer 1.4.5                // File upload handling
 ```
 
 ### **Backend Infrastructure**
@@ -154,42 +180,79 @@ smart-tutor-dashboard/
 │   │   │   ├── LearningModules.js    # Learning content navigation
 │   │   │   ├── Achievements.js       # Badge and achievement system
 │   │   │   └── QuizCard.js          # Individual quiz cards
+│   │   ├── 📁 cmodules/             # Learning modules (31 files)
+│   │   │   ├── Introduction.js       # Programming fundamentals
+│   │   │   ├── Variables.js          # Variable concepts
+│   │   │   ├── JavaIntroduction.js   # Java-specific modules
+│   │   │   ├── PythonIntroduction.js # Python-specific modules
+│   │   │   └── ... (27 more files)    # Additional language modules
 │   │   ├── AdminDashboard.js         # Admin panel interface
 │   │   ├── StudentDashboard.js       # Student main interface
 │   │   ├── TeacherDashboard.js       # Teacher management panel
+│   │   ├── CodeEditor.js             # Monaco-based code editor
+│   │   ├── CodeEditor.css            # Code editor styling
+│   │   ├── AICompanionSystem.js      # AI tutoring companions
+│   │   ├── AIGamingChallenge.js      # AI-powered coding challenges
+│   │   ├── Advanced3DCodingWorld.js  # 3D learning environment
+│   │   ├── CodingRPGSystem.js        # RPG-style learning system
 │   │   ├── LoginPage.js             # Google OAuth login
 │   │   └── LandingPage.js           # Application landing page
+│   ├── 📁 features/                 # Feature-specific modules
+│   │   └── 📁 ai-chart/             # AI chart generation
+│   │       ├── ChartRenderer.js      # Chart rendering logic
+│   │       ├── ChatPanel.js          # AI chat interface
+│   │       ├── VoiceWebsiteBuilder.js # Voice-to-website feature
+│   │       └── index.js              # Main AI chart component
 │   ├── 📁 services/                 # Backend integration
-│   │   └── supabaseClient.js        # Supabase API service layer
+│   │   ├── supabaseClient.js        # Supabase API service layer
+│   │   └── questionGenerationService.js # AI question generation
 │   ├── 📁 hooks/                    # Custom React hooks
 │   │   └── useLocalStorage.js       # Local storage management
 │   ├── 📁 utils/                    # Utility functions
 │   │   └── analytics.js             # Analytics helpers
+│   ├── 📁 contexts/                 # React contexts
+│   │   └── ThemeContext.js          # Theme management
+│   ├── 📁 data/                     # Static data
+│   │   └── appData.js               # Application data
 │   ├── App.js                       # Main React application
 │   ├── index.js                     # React DOM entry point
 │   └── index.css                    # Global styles
+├── 📁 netlify/functions/            # Serverless functions
+│   ├── ai-chat.js                   # AI chat API endpoint
+│   ├── voice-to-website.js          # Voice processing API
+│   ├── text-to-website.js           # Text processing API
+│   ├── data-query.js                # Data query API
+│   └── save-chart.js                # Chart saving API
 ├── 📁 public/                       # Static assets
 │   └── index.html                   # HTML template
 ├── 📁 firebase-admin-panel/         # Firebase integration (legacy)
 ├── 📁 supabase-admin-panel/         # Standalone Supabase admin
 ├── 📄 package.json                  # Dependencies & scripts
 ├── 📄 .env                         # Environment variables
+├── 📄 .env.example                 # Environment template
+├── 📄 netlify.toml                 # Netlify configuration
+├── 📄 vercel.json                  # Vercel configuration
 ├── 📄 supabase_setup.sql           # Database schema
 ├── 📄 enhance_user_schema.sql      # Advanced user fields
 └── 📚 README.md                    # Project documentation
 ```
 
-### **Component Architecture**
+### **Enhanced Component Architecture**
 
 | Component Category | Files | Purpose | Key Technologies |
 |-------------------|-------|---------|------------------|
+| **💻 Code Editor** | `CodeEditor.js`, `CodeEditor.css` | Professional code editing with Monaco | Monaco Editor, VS Code engine |
+| **🤖 AI Integration** | `AICompanionSystem.js`, `questionGenerationService.js` | OpenAI-powered tutoring and question generation | OpenAI GPT-3.5, Google Generative AI |
+| **🎙️ Voice Features** | `VoiceWebsiteBuilder.js`, Netlify functions | Voice-to-website generation | Google Speech API, AI processing |
+| **🎮 Gamification** | `CodingRPGSystem.js`, `AIGamingChallenge.js` | RPG-style learning and coding battles | React state, animations |
 | **🎛️ Admin Panel** | `AdminDashboard.js` | User management, analytics, content control | Supabase queries, React state |
 | **👨‍🎓 Student Interface** | `StudentDashboard.js`, `student/*.js` | Learning modules, progress tracking | Chart.js, React Context |
 | **👩‍🏫 Teacher Tools** | `TeacherDashboard.js`, `charts/*.js` | Class analytics, student monitoring | React-ChartJS-2, data visualization |
 | **🔐 Authentication** | `LoginPage.js`, `SignUpPage.js` | Google OAuth integration | Google Auth Library |
-| **📊 Data Visualization** | `charts/*.js` | Interactive charts and graphs | Chart.js 4.4.0 |
-| **🎯 Assessment System** | `modals/*.js` | Quizzes, assessments, feedback | Modal-based UI components |
-| **🔧 Services** | `services/supabaseClient.js` | Backend API integration | Supabase JS SDK 2.57.4 |
+| **📊 Data Visualization** | `charts/*.js`, `features/ai-chart/` | Interactive charts and AI-generated visualizations | Chart.js 4.4.0, Recharts |
+| **🎯 Assessment System** | `modals/*.js`, AI question generation | Quizzes, assessments, AI-powered feedback | Modal-based UI, OpenAI integration |
+| **🔧 Services** | `services/supabaseClient.js`, Netlify functions | Backend API integration, serverless functions | Supabase JS SDK 2.57.4 |
+| **📚 Learning Modules** | `cmodules/*.js` (31 files) | Language-specific learning content | React components, interactive tutorials |
 
 ---
 
@@ -200,6 +263,112 @@ smart-tutor-dashboard/
 - **Modern Browser** (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
 - **Supabase Account** (For backend database)
 - **Google Cloud Console** (For OAuth authentication)
+- **OpenAI API Key** (For AI-powered features and question generation)
+
+---
+
+## 💻 **Monaco Code Editor Integration**
+
+### **Professional Code Editing Experience**
+The Smart Tutor Dashboard now includes a **full-featured Monaco Editor** - the same powerful editor that powers Visual Studio Code. This provides students with a professional coding environment directly in the browser.
+
+### **🎆 Editor Features**
+
+| Feature | Description | Supported Languages |
+|---------|-------------|--------------------|
+| **🎨 Syntax Highlighting** | Full syntax highlighting with Monaco's language services | JavaScript, Python, Java, C++, HTML, CSS, JSON |
+| **🌌 Multi-Theme Support** | Dark, Light, and High Contrast themes | All themes from VS Code |
+| **⚡ Code Execution** | Simulated code running with realistic outputs | Language-specific execution simulation |
+| **📁 File Management** | Save, export, and manage code files | Multiple file formats (.js, .py, .java, .cpp, etc.) |
+| **🔄 Code Templates** | Pre-built examples for each programming language | Fibonacci, sorting, data structures examples |
+| **📊 Live Statistics** | Real-time character and line counting | All supported languages |
+| **📱 Responsive Design** | Optimized for desktop, tablet, and mobile | Adaptive UI scaling |
+| **⌨️ Keyboard Shortcuts** | Full VS Code keyboard shortcuts support | Ctrl+/, Ctrl+S, Ctrl+Z, etc. |
+
+### **Supported Programming Languages**
+```javascript
+const supportedLanguages = {
+  "javascript": {
+    icon: "🟨",
+    fileExtension: ".js",
+    features: ["ES6+", "Async/Await", "Functions", "Objects"]
+  },
+  "python": {
+    icon: "🐍",
+    fileExtension: ".py", 
+    features: ["Functions", "Classes", "Data Structures", "Libraries"]
+  },
+  "java": {
+    icon: "☕",
+    fileExtension: ".java",
+    features: ["OOP", "Collections", "Exception Handling", "Design Patterns"]
+  },
+  "cpp": {
+    icon: "⚡",
+    fileExtension: ".cpp",
+    features: ["Pointers", "Memory Management", "STL", "RAII"]
+  },
+  "html": {
+    icon: "🌐",
+    fileExtension: ".html",
+    features: ["Semantic HTML", "Forms", "Accessibility", "Modern HTML5"]
+  },
+  "css": {
+    icon: "🎨",
+    fileExtension: ".css",
+    features: ["Flexbox", "Grid", "Animations", "Responsive Design"]
+  }
+};
+```
+
+### **Code Editor Workflow**
+1. **📥 Select Language**: Choose from 7+ programming languages
+2. **⚙️ Customize Environment**: Adjust theme, font size, and settings
+3. **📝 Write Code**: Use professional editor with IntelliSense
+4. **▶️ Execute Code**: Run code with simulated output
+5. **💾 Save & Export**: Download or share your code
+6. **🔄 Reset & Templates**: Start fresh or use provided examples
+
+---
+
+## 🤖 **AI-Powered Features**
+
+### **OpenAI GPT-3.5 Integration**
+The platform now features **complete OpenAI integration** for dynamic, intelligent learning experiences.
+
+### **🎨 AI Capabilities**
+
+| AI Feature | Implementation | Benefits |
+|------------|----------------|----------|
+| **📝 Question Generation** | GPT-3.5 powered dynamic question creation | Unlimited, adaptive programming questions |
+| **🎙️ Voice-to-Website** | Speech recognition + AI website generation | Build websites using voice commands |
+| **📊 Chart Generation** | Natural language to interactive visualizations | Create charts by describing what you want |
+| **🤖 AI Tutoring** | Multiple AI personalities for personalized help | 24/7 intelligent tutoring assistance |
+| **🎮 Adaptive Challenges** | AI-generated coding problems based on skill level | Personalized difficulty progression |
+| **🔍 Performance Analysis** | AI-powered learning pattern analysis | Intelligent recommendations and insights |
+
+### **Question Generation Service**
+```javascript
+// Example AI-Generated Question
+{
+  "question": "What will be the output of this Python code?",
+  "codeExample": "def fibonacci(n):\n    if n <= 1: return n\n    return fibonacci(n-1) + fibonacci(n-2)\nprint(fibonacci(5))",
+  "options": ["3", "5", "8", "13"],
+  "correctAnswer": 1,
+  "explanation": "The fibonacci function calculates the 5th Fibonacci number: 0,1,1,2,3,5",
+  "difficulty": "intermediate",
+  "topic": "Recursion",
+  "points": 20
+}
+```
+
+### **AI Configuration**
+```bash
+# Required Environment Variables
+REACT_APP_OPENAI_API_KEY=sk-your_openai_api_key_here
+GOOGLE_AI_API_KEY=your_google_ai_api_key
+REACT_APP_LLM_API_ENDPOINT=https://api.openai.com/v1/chat/completions
+```
 
 ### **Installation & Setup**
 
@@ -223,6 +392,8 @@ smart-tutor-dashboard/
    REACT_APP_SUPABASE_URL=your_supabase_project_url
    REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
    REACT_APP_GOOGLE_CLIENT_ID=your_google_oauth_client_id
+   REACT_APP_OPENAI_API_KEY=sk-your_openai_api_key_here
+   GOOGLE_AI_API_KEY=your_google_ai_api_key
    ```
 
 4. **Database Setup**
@@ -300,6 +471,12 @@ REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
 - [x] **Progress tracking** with database persistence
 
 ### **Phase 2: Enhanced Features ✅ *Recently Completed***
+- [x] **Monaco Code Editor** with professional VS Code experience
+- [x] **OpenAI GPT-3.5 Integration** for dynamic question generation
+- [x] **Voice-to-Website Builder** with AI-powered generation
+- [x] **AI Chart Generation** from natural language descriptions
+- [x] **Advanced Gamification** with RPG-style progression
+- [x] **AI Companion System** with multiple tutoring personalities
 - [x] **Advanced user schema** with detailed profile fields
 - [x] **Live data synchronization** between frontend and Supabase
 - [x] **Real-time user analytics** with login tracking and performance metrics
