@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@monaco-editor/react';
 import { FaPlay, FaSave, FaRedo, FaCopy, FaDownload, FaCode, FaTerminal, FaLightbulb, FaRobot } from 'react-icons/fa';
+import { AdvancedAICodeAnalyzer } from '../BitCode_02_EduAIyhon';
 import './CodeEditor.css';
 
 const CodeEditor = ({ currentUser }) => {
@@ -11,16 +12,17 @@ const CodeEditor = ({ currentUser }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const [activeTab, setActiveTab] = useState('code');
+  const [analysisResults, setAnalysisResults] = useState(null);
   const editorRef = useRef(null);
 
   const languages = [
-    { value: 'javascript', label: 'JavaScript', icon: '🟨' },
-    { value: 'python', label: 'Python', icon: '🐍' },
-    { value: 'java', label: 'Java', icon: '☕' },
-    { value: 'cpp', label: 'C++', icon: '⚡' },
-    { value: 'html', label: 'HTML', icon: '🌐' },
-    { value: 'css', label: 'CSS', icon: '🎨' },
-    { value: 'json', label: 'JSON', icon: '📄' }
+    { value: 'javascript', label: 'JavaScript', icon: '' },
+    { value: 'python', label: 'Python', icon: '' },
+    { value: 'java', label: 'Java', icon: '' },
+    { value: 'cpp', label: 'C++', icon: '' },
+    { value: 'html', label: 'HTML', icon: '' },
+    { value: 'css', label: 'CSS', icon: '' },
+    { value: 'json', label: 'JSON', icon: '' }
   ];
 
   const themes = [
@@ -93,26 +95,34 @@ public class HelloWorld {
       switch (language) {
         case 'javascript':
           if (code.includes('console.log')) {
-            simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n✅ Code executed successfully!`;
+            simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n Code executed successfully!`;
           } else {
-            simulatedOutput = `✅ JavaScript code compiled successfully!\n\nNote: Add console.log() statements to see output.`;
+            simulatedOutput = ` JavaScript code compiled successfully!\n\nNote: Add console.log() statements to see output.`;
           }
           break;
         case 'python':
-          simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n✅ Python code executed successfully!`;
+          if (code.includes('print')) {
+            simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n Python code executed successfully!`;
+          } else {
+            simulatedOutput = ` Python code compiled successfully!\n\nNote: Add print() statements to see output.`;
+          }
           break;
         case 'java':
-          simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n✅ Java code compiled and executed successfully!`;
+          if (code.includes('System.out.println')) {
+            simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n Java code compiled and executed successfully!`;
+          } else {
+            simulatedOutput = ` Java code compiled successfully!\n\nNote: Add System.out.println() statements to see output.`;
+          }
           break;
         default:
-          simulatedOutput = `✅ Code executed successfully!\n\nOutput depends on your code logic.`;
+          simulatedOutput = ` Code executed successfully!\n\nOutput depends on your code logic.`;
       }
       
       setOutput(simulatedOutput);
       
     } catch (error) {
       console.error('Code execution error:', error);
-      setOutput('❌ Error occurred during code execution.');
+      setOutput(' Error occurred during code execution.');
     } finally {
       setIsRunning(false);
     }
@@ -124,6 +134,7 @@ public class HelloWorld {
       setCode(codeTemplates[newLanguage]);
     }
     setOutput('');
+    setAnalysisResults(null);
   };
 
   const copyCode = () => {
@@ -147,6 +158,7 @@ public class HelloWorld {
       setCode('// Start coding here...');
     }
     setOutput('');
+    setAnalysisResults(null);
   };
 
   return (
@@ -157,7 +169,7 @@ public class HelloWorld {
           <h1>Code Editor</h1>
         </div>
         <div className="editor-subtitle">
-          <p>Write, test, and analyze your code</p>
+          <p>Write, test, and analyze your code with AI-powered insights</p>
         </div>
       </div>
 
@@ -200,86 +212,85 @@ public class HelloWorld {
           <button onClick={runCode} disabled={isRunning} className="run-button">
             <FaPlay /> {isRunning ? 'Running...' : 'Run Code'}
           </button>
-          <button onClick={copyCode} className="action-button">
+          <button onClick={copyCode} className="copy-button">
             <FaCopy /> Copy
           </button>
-          <button onClick={saveCode} className="action-button">
+          <button onClick={saveCode} className="save-button">
             <FaSave /> Save
           </button>
-          <button onClick={resetCode} className="action-button">
+          <button onClick={resetCode} className="reset-button">
             <FaRedo /> Reset
           </button>
         </div>
       </div>
 
-      <div className="editor-workspace">
-        <div className="editor-tabs">
-          <button 
-            className={`tab ${activeTab === 'code' ? 'active' : ''}`}
-            onClick={() => setActiveTab('code')}
-          >
-            <FaCode /> Code
-          </button>
-          <button 
-            className={`tab ${activeTab === 'output' ? 'active' : ''}`}
-            onClick={() => setActiveTab('output')}
-          >
-            <FaTerminal /> Output
-          </button>
-        </div>
+      <div className="editor-tabs">
+        <button 
+          className={`tab ${activeTab === 'code' ? 'active' : ''}`}
+          onClick={() => setActiveTab('code')}
+        >
+          <FaCode /> Code
+        </button>
+        <button 
+          className={`tab ${activeTab === 'output' ? 'active' : ''}`}
+          onClick={() => setActiveTab('output')}
+        >
+          <FaTerminal /> Output
+        </button>
+        <button 
+          className={`tab ${activeTab === 'ai-analysis' ? 'active' : ''}`}
+          onClick={() => setActiveTab('ai-analysis')}
+        >
+          <FaRobot /> AI Analysis
+        </button>
+      </div>
 
-        {activeTab === 'code' ? (
-          <div className="editor-panel">
+      <div className="editor-content">
+        {activeTab === 'code' && (
+          <div className="monaco-editor-container">
             <Editor
-              height="400px"
+              height="500px"
               language={language}
               theme={theme}
               value={code}
-              onChange={(value) => setCode(value || '')}
+              onChange={setCode}
               onMount={handleEditorDidMount}
               options={{
                 fontSize: fontSize,
                 minimap: { enabled: true },
-                lineNumbers: 'on',
-                roundedSelection: false,
                 scrollBeyondLastLine: false,
-                readOnly: false,
+                wordWrap: 'on',
+                lineNumbers: 'on',
                 automaticLayout: true,
-                wordWrap: 'on'
+                suggestOnTriggerCharacters: true,
+                acceptSuggestionOnEnter: 'on',
+                tabCompletion: 'on'
               }}
             />
           </div>
-        ) : (
+        )}
+
+        {activeTab === 'output' && (
           <div className="output-panel">
             <div className="output-header">
-              <FaTerminal className="output-icon" />
-              <h3>Output</h3>
+              <h3><FaTerminal /> Output</h3>
             </div>
             <div className="output-content">
-              {output ? (
-                <pre>{output}</pre>
-              ) : (
-                <div className="output-placeholder">
-                  <FaLightbulb className="placeholder-icon" />
-                  <p>Click "Run Code" to see the output here</p>
-                </div>
-              )}
+              <pre>{output || 'Click "Run Code" to see output here...'}</pre>
             </div>
           </div>
         )}
-      </div>
 
-      <div className="editor-footer">
-        <div className="editor-stats">
-          <span>Language: {languages.find(l => l.value === language)?.label}</span>
-          <span>Lines: {code.split('\n').length}</span>
-          <span>Characters: {code.length}</span>
-        </div>
-        
-        <div className="editor-tips">
-          <FaLightbulb className="tip-icon" />
-          <span>Tip: Use Ctrl+/ to comment/uncomment lines</span>
-        </div>
+        {activeTab === 'ai-analysis' && (
+          <div className="ai-analysis-panel">
+            <AdvancedAICodeAnalyzer 
+              code={code}
+              language={language}
+              currentUser={currentUser}
+              onAnalysisUpdate={setAnalysisResults}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
