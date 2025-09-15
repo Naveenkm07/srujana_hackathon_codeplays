@@ -45,6 +45,8 @@ import LearningResources from './LearningResources';
 import EnhancedAchievements from './EnhancedAchievements';
 import EnhancedLearning from './EnhancedLearning';
 import CodeEditor from './CodeEditor';
+import AdvancedAITutor from './advanced-ai/AdvancedAITutor';
+import CodeAnalysisEngine from './advanced-ai/CodeAnalysisEngine';
 
 // Constants
 const DASHBOARD_SECTIONS = {
@@ -56,6 +58,8 @@ const DASHBOARD_SECTIONS = {
   CMODULES: 'cmodules',
   AI_CHARTS: 'ai-charts',
   CODE_EDITOR: 'code-editor',
+  AI_TUTOR: 'ai-tutor',
+  CODE_ANALYSIS: 'code-analysis',
   GAMES: 'games',
   PROFILE: 'profile'
 };
@@ -292,6 +296,20 @@ function StudentDashboard() {
             Code Editor
           </button>
           <button 
+            className={`nav-item ${activeSection === DASHBOARD_SECTIONS.AI_TUTOR ? 'active' : ''}`}
+            onClick={() => setActiveSection(DASHBOARD_SECTIONS.AI_TUTOR)}
+          >
+            <FaRobot className="nav-icon" />
+            AI Tutor
+          </button>
+          <button 
+            className={`nav-item ${activeSection === DASHBOARD_SECTIONS.CODE_ANALYSIS ? 'active' : ''}`}
+            onClick={() => setActiveSection(DASHBOARD_SECTIONS.CODE_ANALYSIS)}
+          >
+            <FaChartLine className="nav-icon" />
+            Code Analysis
+          </button>
+          <button 
             className={`nav-item ${activeSection === DASHBOARD_SECTIONS.GAMES ? 'active' : ''}`}
             onClick={() => setActiveSection(DASHBOARD_SECTIONS.GAMES)}
           >
@@ -359,7 +377,21 @@ function StudentDashboard() {
         {/* Code Editor Section */}
         {activeSection === DASHBOARD_SECTIONS.CODE_EDITOR && (
           <div className="section active">
-            <CodeEditor />
+            <CodeEditor currentUser={currentUser} />
+          </div>
+        )}
+
+        {/* AI Tutor Section */}
+        {activeSection === DASHBOARD_SECTIONS.AI_TUTOR && (
+          <div className="section active">
+            <AdvancedAITutor currentUser={currentUser} />
+          </div>
+        )}
+
+        {/* Code Analysis Section */}
+        {activeSection === DASHBOARD_SECTIONS.CODE_ANALYSIS && (
+          <div className="section active">
+            <CodeAnalysisEngine currentUser={currentUser} />
           </div>
         )}
 

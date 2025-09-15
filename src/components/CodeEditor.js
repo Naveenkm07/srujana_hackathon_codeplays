@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@monaco-editor/react';
-import { FaPlay, FaSave, FaRedo, FaCopy, FaDownload, FaCode, FaTerminal, FaLightbulb } from 'react-icons/fa';
+import { FaPlay, FaSave, FaRedo, FaCopy, FaDownload, FaCode, FaTerminal, FaLightbulb, FaRobot } from 'react-icons/fa';
 import './CodeEditor.css';
 
-const CodeEditor = () => {
+const CodeEditor = ({ currentUser }) => {
   const [code, setCode] = useState('// Welcome to the Code Editor!\n// Start coding here...\n\nconsole.log("Hello, World!");');
   const [language, setLanguage] = useState('javascript');
   const [theme, setTheme] = useState('vs-dark');
@@ -62,110 +62,12 @@ public class HelloWorld {
         if (n <= 1) return n;
         return fibonacci(n - 1) + fibonacci(n - 2);
     }
-}`,
-    
-    cpp: `// C++ Example
-#include <iostream>
-using namespace std;
-
-int fibonacci(int n) {
-    if (n <= 1) return n;
-    return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
-int main() {
-    cout << "Hello, World!" << endl;
-    cout << "Fibonacci of 10: " << fibonacci(10) << endl;
-    return 0;
-}`,
-    
-    html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .highlight { color: #007acc; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Hello, <span class="highlight">World!</span></h1>
-        <p>Welcome to your HTML playground!</p>
-        <button onclick="showMessage()">Click Me!</button>
-    </div>
-    
-    <script>
-        function showMessage() {
-            alert('Hello from JavaScript!');
-        }
-    </script>
-</body>
-</html>`,
-    
-    css: `/* CSS Example */
-body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.card {
-    background: white;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    text-align: center;
-    transform: translateY(0);
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.title {
-    color: #333;
-    font-size: 2em;
-    margin-bottom: 20px;
-}`,
-    
-    json: `{
-  "name": "Code Editor Project",
-  "version": "1.0.0",
-  "description": "A powerful code editor built with React and Monaco",
-  "author": "Student Developer",
-  "features": [
-    "Multi-language support",
-    "Syntax highlighting",
-    "Code execution",
-    "Dark/Light themes"
-  ],
-  "languages": {
-    "supported": ["JavaScript", "Python", "Java", "C++", "HTML", "CSS"],
-    "planned": ["TypeScript", "Go", "Rust"]
-  },
-  "settings": {
-    "theme": "dark",
-    "fontSize": 14,
-    "tabSize": 2,
-    "wordWrap": true
-  }
 }`
   };
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     
-    // Configure editor options
     editor.updateOptions({
       fontSize: fontSize,
       minimap: { enabled: true },
@@ -184,7 +86,6 @@ body {
     setActiveTab('output');
     
     try {
-      // Simulate code execution with different outputs based on language
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       let simulatedOutput = '';
@@ -197,49 +98,36 @@ body {
             simulatedOutput = `✅ JavaScript code compiled successfully!\n\nNote: Add console.log() statements to see output.`;
           }
           break;
-          
         case 'python':
-          if (code.includes('print')) {
-            simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n✅ Code executed successfully!`;
-          } else {
-            simulatedOutput = `✅ Python code compiled successfully!\n\nNote: Add print() statements to see output.`;
-          }
+          simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n✅ Python code executed successfully!`;
           break;
-          
         case 'java':
-          simulatedOutput = `Compiling Java code...
-Hello, World!
-Fibonacci of 10: 55
-
-✅ Code executed successfully!`;
+          simulatedOutput = `Hello, World!\nFibonacci of 10: 55\n\n✅ Java code compiled and executed successfully!`;
           break;
-          
-        case 'cpp':
-          simulatedOutput = `Compiling C++ code...
-Hello, World!
-Fibonacci of 10: 55
-
-✅ Code executed successfully!`;
-          break;
-          
-        case 'html':
-          simulatedOutput = `✅ HTML code is valid!\n\nNote: HTML files are best viewed in a browser.\nThis would render a webpage with interactive elements.`;
-          break;
-          
-        case 'css':
-          simulatedOutput = `✅ CSS code is valid!\n\nNote: CSS styles are applied to HTML elements.\nThis would create a beautiful gradient background with card effects.`;
-          break;
-          
         default:
-          simulatedOutput = `✅ Code syntax is valid!\n\nOutput depends on the execution environment.`;
+          simulatedOutput = `✅ Code executed successfully!\n\nOutput depends on your code logic.`;
       }
       
       setOutput(simulatedOutput);
+      
     } catch (error) {
-      setOutput(`❌ Error: ${error.message}`);
+      console.error('Code execution error:', error);
+      setOutput('❌ Error occurred during code execution.');
     } finally {
       setIsRunning(false);
     }
+  };
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    if (codeTemplates[newLanguage]) {
+      setCode(codeTemplates[newLanguage]);
+    }
+    setOutput('');
+  };
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(code);
   };
 
   const saveCode = () => {
@@ -247,136 +135,107 @@ Fibonacci of 10: 55
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `code.${getFileExtension(language)}`;
-    document.body.appendChild(a);
+    a.download = `code.${language === 'javascript' ? 'js' : language === 'python' ? 'py' : language}`;
     a.click();
-    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
-  const getFileExtension = (lang) => {
-    const extensions = {
-      javascript: 'js',
-      python: 'py',
-      java: 'java',
-      cpp: 'cpp',
-      html: 'html',
-      css: 'css',
-      json: 'json'
-    };
-    return extensions[lang] || 'txt';
-  };
-
   const resetCode = () => {
-    setCode(codeTemplates[language] || '// Start coding here...');
-    setOutput('');
-  };
-
-  const copyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      // You could add a toast notification here
-    } catch (err) {
-      console.error('Failed to copy code:', err);
+    if (codeTemplates[language]) {
+      setCode(codeTemplates[language]);
+    } else {
+      setCode('// Start coding here...');
     }
-  };
-
-  const handleLanguageChange = (newLanguage) => {
-    setLanguage(newLanguage);
-    setCode(codeTemplates[newLanguage] || '// Start coding here...');
     setOutput('');
   };
 
   return (
-    <div className="code-editor-container">
+    <div className="code-editor">
       <div className="editor-header">
         <div className="editor-title">
           <FaCode className="editor-icon" />
-          <h3>Code Editor</h3>
+          <h1>Code Editor</h1>
         </div>
-        
-        <div className="editor-controls">
-          <div className="language-selector">
-            <label>Language:</label>
-            <select value={language} onChange={(e) => handleLanguageChange(e.target.value)}>
-              {languages.map(lang => (
-                <option key={lang.value} value={lang.value}>
-                  {lang.icon} {lang.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div className="theme-selector">
-            <label>Theme:</label>
-            <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-              {themes.map(th => (
-                <option key={th.value} value={th.value}>{th.label}</option>
-              ))}
-            </select>
-          </div>
-          
-          <div className="font-size-control">
-            <label>Size:</label>
-            <input 
-              type="range" 
-              min="12" 
-              max="24" 
-              value={fontSize} 
-              onChange={(e) => setFontSize(parseInt(e.target.value))}
-            />
-            <span>{fontSize}px</span>
-          </div>
+        <div className="editor-subtitle">
+          <p>Write, test, and analyze your code</p>
         </div>
       </div>
 
-      <div className="editor-toolbar">
-        <button 
-          className="toolbar-btn run-btn" 
-          onClick={runCode} 
-          disabled={isRunning}
-        >
-          <FaPlay /> {isRunning ? 'Running...' : 'Run Code'}
-        </button>
-        
-        <button className="toolbar-btn" onClick={saveCode}>
-          <FaDownload /> Save
-        </button>
-        
-        <button className="toolbar-btn" onClick={copyCode}>
-          <FaCopy /> Copy
-        </button>
-        
-        <button className="toolbar-btn" onClick={resetCode}>
-          <FaRedo /> Reset
-        </button>
-        
-        <div className="toolbar-divider"></div>
-        
-        <button 
-          className={`toolbar-btn ${activeTab === 'code' ? 'active' : ''}`}
-          onClick={() => setActiveTab('code')}
-        >
-          <FaCode /> Code
-        </button>
-        
-        <button 
-          className={`toolbar-btn ${activeTab === 'output' ? 'active' : ''}`}
-          onClick={() => setActiveTab('output')}
-        >
-          <FaTerminal /> Output
-        </button>
+      <div className="editor-controls">
+        <div className="language-selector">
+          <label>Language:</label>
+          <select value={language} onChange={(e) => handleLanguageChange(e.target.value)}>
+            {languages.map(lang => (
+              <option key={lang.value} value={lang.value}>
+                {lang.icon} {lang.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="theme-selector">
+          <label>Theme:</label>
+          <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+            {themes.map(themeOption => (
+              <option key={themeOption.value} value={themeOption.value}>
+                {themeOption.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="font-controls">
+          <label>Font Size:</label>
+          <input 
+            type="range" 
+            min="12" 
+            max="24" 
+            value={fontSize}
+            onChange={(e) => setFontSize(Number(e.target.value))}
+          />
+          <span>{fontSize}px</span>
+        </div>
+
+        <div className="editor-actions">
+          <button onClick={runCode} disabled={isRunning} className="run-button">
+            <FaPlay /> {isRunning ? 'Running...' : 'Run Code'}
+          </button>
+          <button onClick={copyCode} className="action-button">
+            <FaCopy /> Copy
+          </button>
+          <button onClick={saveCode} className="action-button">
+            <FaSave /> Save
+          </button>
+          <button onClick={resetCode} className="action-button">
+            <FaRedo /> Reset
+          </button>
+        </div>
       </div>
 
       <div className="editor-workspace">
+        <div className="editor-tabs">
+          <button 
+            className={`tab ${activeTab === 'code' ? 'active' : ''}`}
+            onClick={() => setActiveTab('code')}
+          >
+            <FaCode /> Code
+          </button>
+          <button 
+            className={`tab ${activeTab === 'output' ? 'active' : ''}`}
+            onClick={() => setActiveTab('output')}
+          >
+            <FaTerminal /> Output
+          </button>
+        </div>
+
         {activeTab === 'code' ? (
           <div className="editor-panel">
             <Editor
-              height="500px"
+              height="400px"
               language={language}
               theme={theme}
               value={code}
-              onChange={setCode}
+              onChange={(value) => setCode(value || '')}
               onMount={handleEditorDidMount}
               options={{
                 fontSize: fontSize,
@@ -384,10 +243,9 @@ Fibonacci of 10: 55
                 lineNumbers: 'on',
                 roundedSelection: false,
                 scrollBeyondLastLine: false,
+                readOnly: false,
                 automaticLayout: true,
-                wordWrap: 'on',
-                formatOnPaste: true,
-                formatOnType: true
+                wordWrap: 'on'
               }}
             />
           </div>
@@ -395,7 +253,7 @@ Fibonacci of 10: 55
           <div className="output-panel">
             <div className="output-header">
               <FaTerminal className="output-icon" />
-              <h4>Output</h4>
+              <h3>Output</h3>
             </div>
             <div className="output-content">
               {output ? (
