@@ -45,7 +45,7 @@ import LearningResources from './LearningResources';
 import EnhancedAchievements from './EnhancedAchievements';
 import EnhancedLearning from './EnhancedLearning';
 import CodeEditor from './CodeEditor';
-import AdvancedAITutor from './advanced-ai/AdvancedAITutor';
+import AdvancedAITutor from '../BitCode_02_EduAIyhon/AdvancedAITutor';
 import CodeAnalysisEngine from './advanced-ai/CodeAnalysisEngine';
 
 // Constants

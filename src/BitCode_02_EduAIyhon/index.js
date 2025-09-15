@@ -6,6 +6,8 @@
  */
 
 export { default as AdvancedAICodeAnalyzer } from './AdvancedAICodeAnalyzer';
+export { default as AdvancedAITutor } from './AdvancedAITutor';
+export { default as CodeAnalysisEngine } from './CodeAnalysisEngine';
 
 // Additional components can be exported here as they are created
 // export { default as AITutorAssistant } from './AITutorAssistant';
