@@ -279,13 +279,13 @@
 }
 
 .achievement-card.locked {
-  opacity: 0.6;
-  filter: grayscale(50%);
+  opacity: 0.85;
+  filter: grayscale(20%);
 }
 
 .achievement-card.locked:hover {
-  opacity: 0.8;
-  filter: grayscale(20%);
+  opacity: 0.95;
+  filter: grayscale(0%);
 }
 
 @keyframes earnedPulse {
