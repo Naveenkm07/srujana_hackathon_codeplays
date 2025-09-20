@@ -1000,4 +1000,5 @@ npm start
 
 **Built with ❤️ using React, Supabase, and modern web technologies**
 
-</div>
+</div>#   s m a r t - t u t o r - n a v e e n k m 0 7  
+ 
